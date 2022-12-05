@@ -37,7 +37,7 @@
                 <div class="card-content">
                     <div class="row me-4">
                         <div class="col-md-12 col-12 text-end">
-                            <a href="<?php echo site_url('gallery/all_photo/'.$this->uri->segment(3))?>" class="btn btn-warning btn-sm" title="Kembali ke halaman sebelumnya">kembali</a>
+                            <a href="<?php echo site_url('gallery/all_photo/'.$this->uri->segment(3))?>" class="btn btn-warning btn-sm" title="Kembali ke halaman sebelumnya"><i class="bi bi-arrow-left"></i> kembali</a>
                         </div>
                     </div>
 

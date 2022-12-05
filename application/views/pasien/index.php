@@ -47,9 +47,8 @@
                 <div class="card-content">
                     <div class="row me-4">
                         <div class="col-md-12 col-12 text-end">
-                            <a href="<?= site_url('pasien/create_page'); ?>" class="btn btn-sm btn-primary">
-                                <i class="fas fa-plus"></i> Tambah
-                            </a>
+                            <a href="<?= site_url('pasien/create_page'); ?>" class="btn btn-sm btn-primary" title="Tambah data"><i class="fas fa-plus"></i> Tambah</a>
+                            <a href="<?php echo site_url('pasien')?>" class="btn btn-success btn-sm" title="Refresh halaman"><i class="bi bi-arrow-clockwise"></i> refresh</a>
                         </div>
                     </div>
 
@@ -85,18 +84,16 @@
                                                     <td><?php echo $key->createtime; ?></td>
                                                     <td>
                                                         <div class="btn-group dropstart mb-1">
-                                                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                                                Aksi
-                                                            </button>
+                                                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" title="Pilih Aksi" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
                                                             <ul class="dropdown-menu">
                                                                 <li>
-                                                                    <button type="submit" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#FormDetail<?php echo $key->pasien_id; ?>">Detail</button>
+                                                                    <button type="submit" class="dropdown-item" data-bs-toggle="modal" title="Lihat data" data-bs-target="#FormDetail<?php echo $key->pasien_id; ?>"><i class="bi bi-eye"></i> Detail</button>
                                                                 </li>
                                                                 <li>
-                                                                    <button type="submit" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#FormUbah<?php echo $key->pasien_id; ?>">Ubah</button>
+                                                                    <button type="submit" class="dropdown-item" data-bs-toggle="modal" title="Ubah data" data-bs-target="#FormUbah<?php echo $key->pasien_id; ?>"><i class="bi bi-pencil-square"></i> Ubah</button>
                                                                 </li>
                                                                 <li>
-                                                                    <button type="submit" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#FormHapus<?php echo $key->pasien_id; ?>">Hapus</button>
+                                                                    <button type="submit" class="dropdown-item" data-bs-toggle="modal" title="Hapus data" data-bs-target="#FormHapus<?php echo $key->pasien_id; ?>"><i class="bi bi-x-lg"></i> Hapus</button>
                                                                 </li>
                                                             </ul>
                                                         </div>

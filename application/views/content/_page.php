@@ -31,7 +31,8 @@
                 <?php echo form_open_multipart("content/update")?>
                     <div class="row me-4 mt-4">
                         <div class="col-md-12 col-12 text-end">
-                            <button type="submit" class="btn btn-info btn-sm" title="Update data">Ubah</button>
+                            <button type="submit" class="btn btn-info btn-sm" title="Ubah data"><i class="bi bi-pencil-square"></i> Ubah</button>
+                            <a href="<?php echo site_url('content/page/'.$this->uri->segment(3))?>" class="btn btn-success btn-sm" title="Refresh halaman"><i class="bi bi-arrow-clockwise"></i> refresh</a>
                         </div>
                     </div>
 

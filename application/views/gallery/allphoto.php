@@ -31,8 +31,8 @@
                 <div class="card-content">
                     <div class="row me-4 mt-4">
                         <div class="col-md-12 col-12 text-end">
-                            <a href="<?php echo site_url('gallery/dropzone_photo/'.$this->uri->segment(3))?>" class="btn btn-primary btn-sm" title="Tambah Foto"><i class="fas fa-plus"></i>Tambah</a>
-                            <a href="<?php echo site_url('gallery/data/photo')?>" class="btn btn-warning btn-sm" title="Kembali ke halaman sebelumya">kembali</a>
+                            <a href="<?php echo site_url('gallery/dropzone_photo/'.$this->uri->segment(3))?>" class="btn btn-primary btn-sm" title="Tambah Foto"><i class="fas fa-plus"></i> Tambah</a>
+                            <a href="<?php echo site_url('gallery/data/photo')?>" class="btn btn-warning btn-sm" title="Kembali ke halaman sebelumya"><i class="bi bi-arrow-left"></i> kembali</a>
                         </div>
                     </div>
 
@@ -68,8 +68,7 @@
                                                         <input type="hidden" class="form-control" name="gallery_photo_id" required="required" value="<?php echo $key->gallery_photo_id;?>">
                                                         <input type="hidden" class="form-control" name="gallery_id" required="required" value="<?php echo $key->gallery_id;?>">
                                                         <input type="hidden" class="form-control" name="gallery_photo_token" required="required" value="<?php echo $key->gallery_photo_token;?>">
-                                                        <button type="submit" class="btn btn-danger btn-sm">
-                                                            Hapus
+                                                        <button type="submit" class="btn btn-danger btn-sm" title="Hapus data"><i class="bi bi-x-lg"></i> Hapus
                                                         </button>
                                                         <?php echo form_close(); ?>
                                                      </td>

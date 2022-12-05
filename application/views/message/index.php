@@ -30,7 +30,7 @@
                 <div class="card-content">
                     <div class="row me-4 mt-4">
                         <div class="col-md-12 col-12 text-end">
-                            <a href="<?php echo site_url('message')?>" class="btn btn-success btn-sm" title="Refresh halaman">refresh</a>
+                            <a href="<?php echo site_url('message')?>" class="btn btn-success btn-sm" title="Refresh halaman"><i class="bi bi-arrow-clockwise"></i> refresh</a>
                         </div>
                     </div>
                     <!-- data tabel -->
@@ -75,17 +75,15 @@
                                                     <td><?php echo indonesiaDate($key->message_date);?></td>
                                                     <td>
                                                         <div class="btn-group dropstart mb-1">
-                                                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                                                Aksi
-                                                            </button>
+                                                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" title="Pilih Aksi" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
                                                             <ul class="dropdown-menu">
                                                                 <li>
-                                                                    <button type="submit" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#FormDetail<?php echo $key->message_id;?>">Detail</button>
+                                                                    <button type="submit" class="dropdown-item" data-bs-toggle="modal" title="Lihat data" data-bs-target="#FormDetail<?php echo $key->message_id;?>"><i class="bi bi-eye"></i> Detail</button>
                                                                 </li>
                                                                 <li>
                                                                     <?php echo form_open_multipart("message/delete") ?>
                                                                     <?php echo csrf(); ?>
-                                                                    <button type="submit" class="dropdown-item">Hapus</button>
+                                                                    <button type="submit" class="dropdown-item" title="Hapus data"><i class="bi bi-x-lg"></i> Hapus</button>
                                                                     <input type="hidden" class="form-control" name="message_id" required="required" value="<?php echo $key->message_id; ?>">
                                                                     <?php echo form_close(); ?>
                                                                 </li>

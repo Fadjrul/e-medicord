@@ -32,8 +32,8 @@
                 <?php echo form_open_multipart("news/update")?>
                     <div class="row me-4 mt-4">
                         <div class="col-md-12 col-12 text-end">
-                            <button type="submit" class="btn btn-info btn-sm" title="Update data">Ubah</button>
-                            <a href="<?php echo site_url('news')?>" class="btn btn-warning btn-sm" title="kembali ke halaman sebelumnya">kembali</a>
+                            <button type="submit" class="btn btn-info btn-sm" title="Update data"><i class="bi bi-pencil-square"></i> Ubah</button>
+                            <a href="<?php echo site_url('news')?>" class="btn btn-warning btn-sm" title="kembali ke halaman sebelumnya"><i class="bi bi-arrow-left"></i> kembali</a>
                         </div>
                     </div>
 

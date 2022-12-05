@@ -130,8 +130,8 @@
                                             </div>
                                         </div>
                                         <div class="col-12 d-flex justify-content-end mt-2">
-                                            <button type="submit" class="btn btn-primary me-1 mb-1" title="Update data setting">Update</button>
-                                            <a href="<?php echo site_url('setting') ?>" class="btn btn-light-secondary me-1 mb-1" title="Refresh Halaman">Reset</a>
+                                            <button type="submit" class="btn btn-info btn-sm me-1 mb-1" title="Ubah data setting"><i class="bi bi-pencil-square"></i> Ubah</button>
+                                            <a href="<?php echo site_url('setting')?>" class="btn btn-success btn-sm me-1 mb-1" title="Refresh halaman"><i class="bi bi-arrow-clockwise"></i> refresh</a>
                                         </div>
                                     </div>
                                 </form>

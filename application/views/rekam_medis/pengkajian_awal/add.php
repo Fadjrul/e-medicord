@@ -45,7 +45,7 @@
                         <div class="card-content">
                             <div class="row me-4 mt-1">
                                 <div class="col-md-12 col-12 text-end">
-                                    <a href="<?php echo site_url('pengkajian_awal')?>" class="btn btn-warning btn-sm" title="Kembali ke halaman sebelumya">kembali</a>
+                                    <a href="<?php echo site_url('pengkajian_awal')?>" class="btn btn-warning btn-sm" title="Kembali ke halaman sebelumya"><i class="bi bi-arrow-left"></i> kembali</a>
                                 </div>
                             </div>
                             <div class="card-title">

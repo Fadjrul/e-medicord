@@ -48,9 +48,8 @@
                 <div class="card-content">
                     <div class="row me-4">
                         <div class="col-md-12 col-12 text-end">
-                            <a href="<?= site_url('pengkajian_awal/create_page'); ?>" class="btn btn-sm btn-primary">
-                                <i class="fas fa-plus"></i> Tambah
-                            </a>
+                            <a href="<?= site_url('pengkajian_awal/create_page'); ?>" class="btn btn-sm btn-primary" title="Tambah data"><i class="fas fa-plus"></i> Tambah</a>
+                            <a href="<?php echo site_url('pengkajian_awal')?>" class="btn btn-success btn-sm" title="Refresh halaman"><i class="bi bi-arrow-clockwise"></i> refresh</a>
                         </div>
                     </div>
 
@@ -86,28 +85,26 @@
                                                     
                                                     <td>
                                                         <div class="btn-group dropstart mb-1">
-                                                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                                                Aksi
-                                                            </button>
+                                                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" title="Pilih Aksi" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
                                                             <ul class="dropdown-menu">
                                                                 <li>
                                                                     <?php echo form_open("pengkajian_awal/detail_page/" . $key->pengkajian_awal_id); ?>
                                                                     <?php echo csrf(); ?>
-                                                                    <button type="submit" class="dropdown-item">Detail</button>
+                                                                    <button type="submit" class="dropdown-item" title="Lihat data"><i class="bi bi-eye"></i> Detail</button>
                                                                     <input type="hidden" class="form-control" name="pengkajian_awal_id" required="required">
                                                                     <?php echo form_close(); ?>
                                                                 </li>
                                                                 <li>
                                                                     <?php echo form_open("pengkajian_awal/update_page/" . $key->pengkajian_awal_id); ?>
                                                                     <?php echo csrf(); ?>
-                                                                    <button type="submit" class="dropdown-item">Ubah</button>
+                                                                    <button type="submit" class="dropdown-item" title="Ubah data"><i class="bi bi-pencil-square"></i> Ubah</button>
                                                                     <input type="hidden" class="form-control" name="pengkajian_awal_id" required="required">
                                                                     <?php echo form_close(); ?>
                                                                 </li>
                                                                 <li>
                                                                     <?php echo form_open("pengkajian_awal/delete") ?>
                                                                     <?php echo csrf(); ?>
-                                                                    <button type="submit" class="dropdown-item">Hapus</button>
+                                                                    <button type="submit" class="dropdown-item" title="Hapus data"><i class="bi bi-x-lg"></i> Hapus</button>
                                                                     <input type="hidden" class="form-control" name="pengkajian_awal_id" required="required" value="<?php echo $key->pengkajian_awal_id; ?>">
                                                                     <?php echo form_close(); ?>
                                                                 </li>

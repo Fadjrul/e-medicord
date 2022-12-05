@@ -31,6 +31,7 @@
                     <div class="row me-4 mt-4">
                         <div class="col-md-12 col-12 text-end">
                             <a href="<?php echo site_url('news/create_page')?>" class="btn btn-primary btn-sm" title="Tambah data"><i class="fas fa-plus"></i> Tambah</a>
+                            <a href="<?php echo site_url('news')?>" class="btn btn-success btn-sm" title="Refresh halaman"><i class="bi bi-arrow-clockwise"></i> refresh</a>
                         </div>
                     </div>
 
@@ -67,20 +68,18 @@
                                                     <td><?php echo $key->user_fullname;?></td>
                                                     <td>
                                                         <div class="btn-group dropstart mb-1">
-                                                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                                                Aksi
-                                                            </button>
+                                                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" title="Pilih Aksi" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
                                                             <ul class="dropdown-menu">
                                                                 <li>
-                                                                    <a href="<?php echo site_url('news/detail_page/'.$key->news_id); ?>" class="dropdown-item" >Detail</a>
+                                                                    <a href="<?php echo site_url('news/detail_page/'.$key->news_id); ?>" class="dropdown-item" title="Lihat data"><i class="bi bi-eye"></i> Detail</a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="<?php echo site_url('news/update_page/'.$key->news_id); ?>" class="dropdown-item" >Ubah</a>
+                                                                    <a href="<?php echo site_url('news/update_page/'.$key->news_id); ?>" class="dropdown-item" title="Ubah data"><i class="bi bi-pencil-square"></i> Ubah</a>
                                                                 </li>
                                                                 <li>
                                                                     <?php echo form_open("news/delete") ?>
                                                                     <?php echo csrf(); ?>
-                                                                    <button type="submit" class="dropdown-item">Hapus</button>
+                                                                    <button type="submit" class="dropdown-item" title="Hapus data"><i class="bi bi-x-lg"></i> Hapus</button>
                                                                     <input type="hidden" class="form-control" name="news_id" required="required" value="<?php echo $key->news_id;?>">
                                                                     <?php echo form_close(); ?>
                                                                 </li>

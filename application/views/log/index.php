@@ -28,12 +28,17 @@
         <section class="section">
             <div class="card">
                 <div class="card-content">
+                    <div class="row me-4 mt-4">
+                        <div class="col-md-12 col-12 text-end">
+                                <a href="<?php echo site_url('log')?>" class="btn btn-success btn-sm" title="Refresh halaman"><i class="bi bi-arrow-clockwise"></i> refresh</a>
+                            </div>
+                    </div>
 
                     <!-- data tabel -->
-                    <div class="row p-4" id="table-hover-row">
+                    <div class="row p-4">
                         <div class="col-12">
                             <div class="table-responsive">
-                                <table class="table table-hover" id="DataTable">
+                                <table class="table table-striped" id="DataTable">
                                     <thead>
                                         <tr>
                                             <th>No.</th>
@@ -59,11 +64,11 @@
                                                     <td><?php echo $key->user_name;?></td>
                                                     <td><?php echo $key->log_ipaddress;?></td>
                                                     <td>
-                                                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#FormDetail<?php echo $key->log_id;?>">Detail</button>
+                                                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" title="Lihat data" data-bs-target="#FormDetail<?php echo $key->log_id;?>"><i class="bi bi-eye"></i> Detail</button>
                                                     </td>
                                                 </tr>
 
-                                                <!-- Modal Detail Field -->
+                                                <!-- Modal Detail Log -->
                                                 <div class="modal fade text-start" id="FormDetail<?php echo $key->log_id?>" tabindex="-1" role="dialog"
                                                     aria-labelledby="myModalLabel33" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"

@@ -32,7 +32,7 @@
                     <div class="row me-4 mt-4">
                         <div class="col-md-12 col-12 text-end">
                             <a href="<?php echo site_url('news/create_page')?>" class="btn btn-primary btn-sm" title="Tambah data"><i class="fas fa-plus"></i> Tambah</a>
-                            <a href="<?php echo site_url('news')?>" class="btn btn-warning btn-sm" title="kembali ke halaman sebelumnya">kembali</a>
+                            <a href="<?php echo site_url('news')?>" class="btn btn-warning btn-sm" title="kembali ke halaman sebelumnya"><i class="bi bi-arrow-left"></i> kembali</a>
                         </div>
                     </div>
 

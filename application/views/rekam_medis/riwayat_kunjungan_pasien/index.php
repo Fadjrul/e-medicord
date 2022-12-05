@@ -47,9 +47,51 @@
                 <div class="card-content">
                     <div class="row me-4">
                         <div class="col-md-12 col-12 text-end">
-                            <a href="<?= site_url('pengkajian_awal/create_page'); ?>" class="btn btn-sm btn-primary">
-                                <i class="fas fa-plus"></i> Tambah
-                            </a>
+                            <button type="button" class="btn btn-sm btn-primary btn-sm" title="Tambah data" data-bs-toggle="modal" data-bs-target="#FormTambah"><i class="fas fa-plus"></i> Tambah</button>
+                            <a href="<?php echo site_url('riwayat_kunjungan_pasien')?>" class="btn btn-success btn-sm" title="Refresh halaman"><i class="bi bi-arrow-clockwise"></i> refresh</a>
+                        </div>
+                    </div>
+
+                     <!-- Modal Tambah Rekam Medis -->
+                     <div class="modal fade text-start modal-borderless" id="FormTambah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
+                            <div class="modal-content">
+                            <?php
+                                foreach($pasien as $key){}
+                            ?>
+                            <?php echo form_open('riwayat_kunjungan_pasien/create_page/' . $key->pasien_id); ?>
+                                <form>
+                                    <div class="modal-body">
+                                        <div class="row form-group">
+                                            <div class="col-12">
+                                                <label for=""><strong> PASIEN </strong></label>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-12">
+                                            <?php echo csrf(); ?>
+                                                <input type="hidden" class="form-control" name="pasien_id" value="<?php echo $key->pasien_id; ?>">
+                                                    <select class="choices form-select" name="pasien_id" required style="width:100%">
+                                                        <option value="">- Pilih Pasien -</option>
+                                                        <?php
+                                                            foreach($pasien as $key){
+                                                                echo '<option value="'.$key->pasien_id.'">'.$key->no_rekam_medis." | ".$key->nama_pasien.'</option>';
+                                                            }
+                                                        ?>
+
+                                                    </select>
+                                                    <input type="hidden" class="form-control" name="pasien_id" value="<?php echo $key->pasien_id; ?>">
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Buat</button>
+                                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">Batal</button>
+                                    </div>
+                                </form>
+                            <?php echo form_close(); ?>
+                            </div>
                         </div>
                     </div>
 
@@ -64,7 +106,7 @@
                                             <th>Nomor Rekam Medis</th>
                                             <th>Nama Pasien</th>
                                             <th>Jenis Kelamin</th>
-                                            <th>Tanggal Periksa</th>
+                                            <th>Tanggal Kunjungan</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -85,28 +127,26 @@
                                                     
                                                     <td>
                                                         <div class="btn-group dropstart mb-1">
-                                                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                                                Aksi
-                                                            </button>
+                                                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" title="Pilih Aksi" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
                                                             <ul class="dropdown-menu">
                                                                 <li>
                                                                     <?php echo form_open("riwayat_kunjungan_pasien/detail_page/" . $key->riwayat_kunjungan_pasien_id); ?>
                                                                     <?php echo csrf(); ?>
-                                                                    <button type="submit" class="dropdown-item">Detail</button>
+                                                                    <button type="submit" class="dropdown-item" title="Lihat data"><i class="bi bi-eye"></i> Detail</button>
                                                                     <input type="hidden" class="form-control" name="riwayat_kunjungan_pasien_id" required="required">
                                                                     <?php echo form_close(); ?>
                                                                 </li>
                                                                 <li>
                                                                     <?php echo form_open("riwayat_kunjungan_pasien/update_page/" . $key->riwayat_kunjungan_pasien_id); ?>
                                                                     <?php echo csrf(); ?>
-                                                                    <button type="submit" class="dropdown-item">Ubah</button>
+                                                                    <button type="submit" class="dropdown-item" title="Ubah data"><i class="bi bi-pencil-square"></i> Ubah</button>
                                                                     <input type="hidden" class="form-control" name="riwayat_kunjungan_pasien_id" required="required">
                                                                     <?php echo form_close(); ?>
                                                                 </li>
                                                                 <li>
                                                                     <?php echo form_open("riwayat_kunjungan_pasien/delete") ?>
                                                                     <?php echo csrf(); ?>
-                                                                    <button type="submit" class="dropdown-item">Hapus</button>
+                                                                    <button type="submit" class="dropdown-item" title="Hapus data"><i class="bi bi-x-lg"></i> Hapus</button>
                                                                     <input type="hidden" class="form-control" name="riwayat_kunjungan_pasien_id" required="required" value="<?php echo $key->riwayat_kunjungan_pasien_id; ?>">
                                                                     <?php echo form_close(); ?>
                                                                 </li>

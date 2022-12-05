@@ -15,13 +15,22 @@
 <div class="row h-100">
     <div class="col-lg-5 col-12">
         <div id="auth-left">
-            <div class="auth-logo">
-                <img src="<?php echo base_url() ?>assets/core-images/<?php echo $setting[0]->setting_logo; ?>" alt="Logo aplikasi"> <h4 class="auth-title"><?php echo $setting[0]->setting_short_appname; ?></h4>
+            <div class="row align-items-center">
+                <div class="col-4">
+                    <img src="<?php echo base_url() ?>assets/core-images/<?php echo $setting[0]->setting_logo; ?>" style="width:80px;" alt="Logo aplikasi">
+                </div>
+                <div class="col-8">
+                    <h3><?php echo $setting[0]->setting_short_appname; ?></h3>
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-12">
+                    <p class="auth-subtitle mb-3">Sign in untuk memulai aplikasi.</p>
+                </div>
             </div>
             
-            <p class="auth-subtitle mb-3">Sign in untuk memulai aplikasi.</p>
             <div class="row">
-                <div class="col-12 text-sm text-dark">
+                <div class="col-12 text-sm">
                     <!-- ALERT -->
                     <?php 
                         if ($this->session->flashdata('alert')) {
@@ -56,10 +65,10 @@
         </div>
         <!-- footer form login -->
         <div>
-                <p class="text-center">
-                Created by <a href="https://instagram.com/fadjrul00"><?php echo $setting[0]->setting_owner_name;?></a> <br><b>Copyright &copy; <?php echo date('Y'); ?> <?php echo $setting[0]->setting_short_appname; ?>, version 1.0</b>
-                </p>
-            </div>
+            <p class="text-center">
+            Created by <a href="https://instagram.com/fadjrul00"><?php echo $setting[0]->setting_owner_name;?></a> <br><b>Copyright &copy; <?php echo date('Y'); ?> <?php echo $setting[0]->setting_short_appname; ?>, version 1.0</b>
+            </p>
+        </div>
     </div>
     <div class="col-lg-7 d-none d-lg-block">
         <div id="auth-right">

@@ -6,17 +6,62 @@ class M_riwayat_kunjungan_pasien extends CI_Model {
         parent::__construct();
     }
     
-    public function read($limit, $start, $key) {
-        $this->db->select('*');
-        $this->db->from('tbl_rm_riwayat_kunjungan_pasien');
+    public function read($limit, $start, $key, $pasien, $dokter, $poliklinik, $status_pasien, $kepesertaan_pasien) {
+        $this->db->select('a.*, b.*, c.*, d.*, e.*, f.*');
+        $this->db->from('tbl_rm_riwayat_kunjungan_pasien a');
+        $this->db->join('tbl_pasien b','a.pasien_id=b.pasien_id','LEFT');
+        $this->db->join('tbl_dokter c','a.dokter_id=c.dokter_id','LEFT');
+        $this->db->join('tbl_poliklinik d','a.poliklinik_id=d.poliklinik_id','LEFT');
+        $this->db->join('tbl_status_pasien e','b.status_pasien_id=e.status_pasien_id','LEFT');
+        $this->db->join('tbl_kepesertaan_pasien f','b.kepesertaan_pasien_id=f.kepesertaan_pasien_id','LEFT');
         
+        if($pasien !=""){
+            $this->db->where('a.pasien_id', $pasien);
+        }
+
+        if($dokter !=""){
+            $this->db->where('a.dokter_id', $dokter);
+            
+        }
+
+        if($poliklinik !=""){
+            $this->db->where('a.poliklinik_id', $poliklinik);
+            
+        }
+
+        if($status_pasien !=""){
+            $this->db->where('b.status_pasien_id', $status_pasien);
+        }
+
+        if($kepesertaan_pasien !=""){
+            $this->db->where('b.kepesertaan_pasien_id', $kepesertaan_pasien);
+        }
+
         if($key!=''){
-            $this->db->like("pasien_id", $key);
+            $this->db->like("a.subjektif", $key);
+            $this->db->or_like("a.objektif", $key);
+            $this->db->or_like("a.assesment", $key);
+            $this->db->or_like("a.planning", $key);
+            $this->db->or_like("b.nama_pasien", $key);
+            $this->db->or_like("b.no_rekam_medis", $key);
+            $this->db->or_like("b.jenis_kelamin", $key);
+            $this->db->or_like("b.tgl_lahir_pasien", $key);
+            $this->db->or_like("b.no_bpjs_pasien", $key);
+            $this->db->or_like("b.nik_pasien", $key);
+            $this->db->or_like("b.dw", $key);
+            $this->db->or_like("b.lw", $key);
+            $this->db->or_like("c.nama_dokter", $key);
+            $this->db->or_like("c.ttd_dokter", $key);
+            $this->db->or_like("d.nama_poliklinik", $key);
+            $this->db->or_like("e.nama_status_pasien", $key);
+            $this->db->or_like("f.nama_kepesertaan_pasien", $key);
         }
 
         if($limit !="" OR $start !=""){
             $this->db->limit($limit, $start);
         }
+
+        $this->db->order_by('a.riwayat_kunjungan_pasien_id', 'DESC');
 
         $query = $this->db->get();
         if ($query->num_rows() > 0) {

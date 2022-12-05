@@ -31,10 +31,9 @@
                 <div class="card-content">
                     <div class="row me-4 mt-4">
                         <div class="col-md-12 col-12 text-end">
-                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#FormTambah"><i class="fas fa-plus"></i>
-                                    Tambah
+                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" title="Tambah data" data-bs-target="#FormTambah"><i class="fas fa-plus"></i> Tambah
                             </button>
+                            <a href="<?php echo site_url('group')?>" class="btn btn-success btn-sm" title="Refresh halaman"><i class="bi bi-arrow-clockwise"></i> refresh</a>
                         </div>
                             <!-- Modal Tambah User -->
                             <div class="modal fade text-start" id="FormTambah" tabindex="-1" role="dialog"
@@ -107,26 +106,19 @@
                                                     <td><?php echo $key->group_name; ?></td>
                                                     <td>
                                                         <div class="btn-group dropstart mb-1">
-                                                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                                                Aksi
+                                                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" title="Pilih Aksi" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i>
                                                             </button>
                                                             <ul class="dropdown-menu">
                                                                 <li>
-                                                                    <button type="submit" class="dropdown-item" data-bs-toggle="modal"
-                                                                            data-bs-target="#FormDetail<?php echo $key->group_id;?>">
-                                                                            Detail
-                                                                    </button>
+                                                                    <button type="submit" class="dropdown-item" data-bs-toggle="modal" title="Lihat data" data-bs-target="#FormDetail<?php echo $key->group_id;?>"><i class="bi bi-eye"></i> Detail </button>
                                                                 </li>
                                                                 <li>
-                                                                    <button type="submit" class="dropdown-item" data-bs-toggle="modal"
-                                                                            data-bs-target="#FormUbah<?php echo $key->group_id;?>">
-                                                                            Ubah
-                                                                    </button>
+                                                                    <button type="submit" class="dropdown-item" data-bs-toggle="modal" title="Ubah data" data-bs-target="#FormUbah<?php echo $key->group_id;?>"><i class="bi bi-pencil-square"></i> Ubah</button>
                                                                 </li>
                                                                 <li>
                                                                     <?php echo form_open("group/delete") ?>
                                                                     <?php echo csrf(); ?>
-                                                                    <button type="submit" class="dropdown-item">Hapus</button>
+                                                                    <button type="submit" class="dropdown-item" title="Hapus data"><i class="bi bi-x-lg"></i> Hapus</button>
                                                                     <input type="hidden" class="form-control" name="group_id" required="required" value="<?php echo $key->group_id; ?>">
                                                                     <?php echo form_close(); ?>
                                                                 </li>
