@@ -17,11 +17,11 @@
         <div class="row">
             <div class="col-12">
                 <!-- ALert -->
-                <?php 
-                    if ($this->session->flashdata('alert')) {
-                        echo $this->session->flashdata('alert');
-                        unset($_SESSION['alert']);
-                    } 
+                <?php
+                if ($this->session->flashdata('alert')) {
+                    echo $this->session->flashdata('alert');
+                    unset($_SESSION['alert']);
+                }
                 ?>
             </div>
         </div>
@@ -49,7 +49,7 @@
                                                 <input type="hidden" class="form-control" name="setting_id" value="<?php echo $setting[0]->setting_id; ?>" required>
                                                 <input type="hidden" class="form-control" name="setting_logo" value="<?php echo $setting[0]->setting_logo; ?>" required>
                                                 <input type="text" id="setting_appname" class="form-control" name="setting_appname" required>
-                                                <input type="hidden" class="form-control" name="setting_background" value="<?php echo $setting[0]->setting_background;?>" required>
+                                                <input type="hidden" class="form-control" name="setting_background" value="<?php echo $setting[0]->setting_background; ?>" required>
                                             </div>
                                         </div>
                                         <div class="col-md-12 col-12">
@@ -103,7 +103,7 @@
                                         <div class="col-md-12 col-12">
                                             <div class="form-group">
                                                 <label for="setting_facebook">Facebook</label>
-                                                <input type="text" id="setting_facebook" class="form-control" name="setting_facebook" >
+                                                <input type="text" id="setting_facebook" class="form-control" name="setting_facebook">
                                             </div>
                                         </div>
                                         <div class="col-md-12 col-12">
@@ -126,13 +126,13 @@
                                         </div>
                                         <div class="col-md-12 col-12">
                                             <div class="form-group">
-                                                <label for="setting_key_speck">Key SPECK-128</label>
-                                                <input type="text" id="setting_key_speck" class="form-control" name="setting_key_speck">
+                                                <label for="setting_key_speck">Key CAMELLIA-128</label>
+                                                <input type="text" id="setting_key_camellia" class="form-control" name="setting_key_camellia">
                                             </div>
                                         </div>
                                         <div class="col-12 d-flex justify-content-end mt-2">
                                             <button type="submit" class="btn btn-info btn-sm me-1 mb-1" title="Ubah data setting"><i class="bi bi-pencil-square"></i> Ubah</button>
-                                            <a href="<?php echo site_url('setting')?>" class="btn btn-success btn-sm me-1 mb-1" title="Refresh halaman"><i class="bi bi-arrow-clockwise"></i> refresh</a>
+                                            <a href="<?php echo site_url('setting') ?>" class="btn btn-success btn-sm me-1 mb-1" title="Refresh halaman"><i class="bi bi-arrow-clockwise"></i> refresh</a>
                                         </div>
                                     </div>
                                 </form>

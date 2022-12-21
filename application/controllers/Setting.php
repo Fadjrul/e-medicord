@@ -63,7 +63,7 @@ class Setting extends CI_Controller
 			if (!$this->upload->do_upload('background')) {
 				echo $this->upload->display_errors();
 			} else {
-				unlink("./assets/core-images/".$this->input->post('setting_background'));
+				unlink("./assets/core-images/" . $this->input->post('setting_background'));
 				$background              	= $this->upload->data();
 				$data['setting_background']	= $background['file_name'];
 			}
@@ -81,7 +81,7 @@ class Setting extends CI_Controller
 		$data['setting_facebook']        = $this->input->post('setting_facebook');
 		$data['setting_youtube']         = $this->input->post('setting_youtube');
 		$data['setting_key_aes']         = $this->input->post('setting_key_aes');
-		$data['setting_key_speck']         = $this->input->post('setting_key_speck');
+		$data['setting_key_camellia']         = $this->input->post('setting_key_camellia');
 
 		$this->m_setting->update_setting($data);
 

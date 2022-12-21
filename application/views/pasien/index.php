@@ -3,14 +3,14 @@
         <div class="row">
             <!-- Page Title -->
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3><?php echo $title;?></h3>
+                <h3><?php echo $title; ?></h3>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <!-- Breadcrumb -->
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="<?php echo site_url('dashboard'); ?>"> Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page"><?php echo $title;?></a></li>
+                        <li class="breadcrumb-item active" aria-current="page"><?php echo $title; ?></a></li>
                     </ol>
                 </nav>
             </div>
@@ -49,7 +49,7 @@
                     <div class="row me-4">
                         <div class="col-md-12 col-12 text-end">
                             <a href="<?= site_url('pasien/create_page'); ?>" class="btn btn-sm btn-primary" title="Tambah data"><i class="fas fa-plus"></i> Tambah</a>
-                            <a href="<?php echo site_url('pasien')?>" class="btn btn-success btn-sm" title="Refresh halaman"><i class="bi bi-arrow-clockwise"></i> refresh</a>
+                            <a href="<?php echo site_url('pasien') ?>" class="btn btn-success btn-sm" title="Refresh halaman"><i class="bi bi-arrow-clockwise"></i> refresh</a>
                         </div>
                     </div>
 
@@ -112,8 +112,10 @@
                                                             <?php echo form_open("pasien/detail_page/" . $key->pasien_id); ?>
                                                             <div class="modal-header text-center">
                                                                 <h4 class="modal-title" id="myModalLabel33">Masukkan Kunci <?php if ($key->jns_key_id == 1) {
-                                                                    echo "(AES-128)";
-                                                                    } else if ($key->jns_key_id == 2) { echo "(SPECK-128)";} else echo ""; ?></h4>
+                                                                                                                                echo "(AES-128)";
+                                                                                                                            } else if ($key->jns_key_id == 2) {
+                                                                                                                                echo "(SPECK-128)";
+                                                                                                                            } else echo ""; ?></h4>
                                                             </div>
                                                             <div class="modal-body">
                                                                 <div class="row">
@@ -146,8 +148,8 @@
                                                             <?php echo form_open("pasien/update_page/" . $key->pasien_id); ?>
                                                             <div class="modal-header text-center">
                                                                 <h4 class="modal-title" id="myModalLabel33">Masukkan Kunci <?php if ($key->jns_key_id == 1) {
-                                                                    echo "(AES-128)";
-                                                                    } else echo "(SPECK-128)"; ?></h4>
+                                                                                                                                echo "(AES-128)";
+                                                                                                                            } else echo "(SPECK-128)"; ?></h4>
                                                             </div>
                                                             <div class="modal-body">
                                                                 <div class="row">
@@ -206,9 +208,12 @@
                         <div class="row text-center">
                             <div class="col-12">
                                 <p class="card-text">
-                                        Klik tombol untuk melihat hasil data enkripsi
+                                    Klik tombol untuk melihat hasil data enkripsi dan menghitung nilai avalenche effect
                                 </p>
-                                <a class="btn btn-info btn-sm mb-2" data-bs-toggle="collapse" href="#multiCollapseCreatePasien" role="button" aria-expanded="false" aria-controls="multiCollapseCreatePasien"><i class="bi bi-eye"></i> Lihat data</a>
+                            </div>
+                            <div class="col-12">
+                                <a class="btn btn-info btn-sm mb-2" data-bs-toggle="collapse" href="#multiCollapseCreatePasien" role="button" aria-expanded="false" aria-controls="multiCollapseCreatePasien">Lihat data</a>
+                                <button type="submit" class="btn btn-info btn-sm mb-2" data-bs-toggle="modal" title="Lihat data" data-bs-target="#FormHitung">Avalenche effect</button>
                             </div>
                         </div>
                         <div class="row">
@@ -239,7 +244,7 @@
                                                 <strong>DATA PASIEN : <?= $pasien_new[0]->nama_pasien ?></strong> <br>
                                                 <strong>TOTAL KARAKTER <?= $total_string ?> KARAKTER</strong> <br> <br>
                                                 <strong>KARAKTER : <?= $pasien_new[0]->nik_pasien ?></strong> <br>
-                                                
+
                                                 <!-- tabel -->
                                                 <div class="row p-4">
                                                     <div class="col-12">
@@ -259,11 +264,11 @@
                                                                         $no = 1;
                                                                         foreach ($strArray as $s => $key) {
                                                                     ?>
-                                                                        <tr>
-                                                                            <td><?php echo $no; ?></td>
-                                                                            <td><?php echo chr($s); ?></td>
-                                                                            <td><?php echo $key; ?></td>
-                                                                        </tr>
+                                                                            <tr>
+                                                                                <td><?php echo $no; ?></td>
+                                                                                <td><?php echo chr($s); ?></td>
+                                                                                <td><?php echo $key; ?></td>
+                                                                            </tr>
 
                                                                     <?php
                                                                             $no++;
@@ -283,11 +288,11 @@
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="nomor_kk" role="tabpanel" aria-labelledby="nomor_kk-tab">
-                                            <strong>No. Rekam Medis : <?= $pasien_new[0]->no_rekam_medis ?></strong> <br>
+                                                <strong>No. Rekam Medis : <?= $pasien_new[0]->no_rekam_medis ?></strong> <br>
                                                 <strong>DATA PASIEN : <?= $pasien_new[0]->nama_pasien ?></strong> <br>
                                                 <strong>TOTAL KARAKTER <?= $total_string ?> KARAKTER</strong> <br> <br>
                                                 <strong>KARAKTER : <?= $pasien_new[0]->no_kk ?></strong> <br>
-                                                
+
                                                 <!-- tabel -->
                                                 <div class="row p-4">
                                                     <div class="col-12">
@@ -307,11 +312,11 @@
                                                                         $no = 1;
                                                                         foreach ($strArray2 as $s => $key) {
                                                                     ?>
-                                                                        <tr>
-                                                                            <td><?php echo $no; ?></td>
-                                                                            <td><?php echo chr($s); ?></td>
-                                                                            <td><?php echo $key; ?></td>
-                                                                        </tr>
+                                                                            <tr>
+                                                                                <td><?php echo $no; ?></td>
+                                                                                <td><?php echo chr($s); ?></td>
+                                                                                <td><?php echo $key; ?></td>
+                                                                            </tr>
 
                                                                     <?php
                                                                             $no++;
@@ -331,11 +336,11 @@
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="nomor_telpon" role="tabpanel" aria-labelledby="nomor_telpon-tab">
-                                            <strong>No. Rekam Medis : <?= $pasien_new[0]->no_rekam_medis ?></strong> <br>
+                                                <strong>No. Rekam Medis : <?= $pasien_new[0]->no_rekam_medis ?></strong> <br>
                                                 <strong>DATA PASIEN : <?= $pasien_new[0]->nama_pasien ?></strong> <br>
                                                 <strong>TOTAL KARAKTER <?= $total_string ?> KARAKTER</strong> <br> <br>
                                                 <strong>KARAKTER : <?= $pasien_new[0]->no_telp_pasien ?></strong> <br>
-                                                
+
                                                 <!-- tabel -->
                                                 <div class="row p-4">
                                                     <div class="col-12">
@@ -355,11 +360,11 @@
                                                                         $no = 1;
                                                                         foreach ($strArray3 as $s => $key) {
                                                                     ?>
-                                                                        <tr>
-                                                                            <td><?php echo $no; ?></td>
-                                                                            <td><?php echo chr($s); ?></td>
-                                                                            <td><?php echo $key; ?></td>
-                                                                        </tr>
+                                                                            <tr>
+                                                                                <td><?php echo $no; ?></td>
+                                                                                <td><?php echo chr($s); ?></td>
+                                                                                <td><?php echo $key; ?></td>
+                                                                            </tr>
 
                                                                     <?php
                                                                             $no++;
@@ -383,7 +388,7 @@
                                                 <strong>DATA PASIEN : <?= $pasien_new[0]->nama_pasien ?></strong> <br>
                                                 <strong>TOTAL KARAKTER : <?= $total_string ?> KARAKTER</strong> <br> <br>
                                                 <strong>KARAKTER : <?= $pasien_new[0]->alamat_pasien ?></strong> <br>
-                                                
+
                                                 <!-- tabel -->
                                                 <div class="row p-4">
                                                     <div class="col-12">
@@ -403,11 +408,11 @@
                                                                         $no = 1;
                                                                         foreach ($strArray4 as $s => $key) {
                                                                     ?>
-                                                                        <tr>
-                                                                            <td><?php echo $no; ?></td>
-                                                                            <td><?php echo chr($s); ?></td>
-                                                                            <td><?php echo $key; ?></td>
-                                                                        </tr>
+                                                                            <tr>
+                                                                                <td><?php echo $no; ?></td>
+                                                                                <td><?php echo chr($s); ?></td>
+                                                                                <td><?php echo $key; ?></td>
+                                                                            </tr>
 
                                                                     <?php
                                                                             $no++;
@@ -434,5 +439,41 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Modal Hitung avalenche effect -->
+            <div class="modal fade text-start" id="FormHitung" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-info">
+                            <h4 class="modal-title" id="myModalLabel33">Hitung Avalenche effect</h4>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <i data-feather="x"></i>
+                            </button>
+                        </div>
+                        <?php echo form_open("pasien/avalen") ?>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <?php echo csrf(); ?>
+                                <input type="text" placeholder="Masukan besar perubahan bit" class="form-control" name="value_perubahan_bit" required="required">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" placeholder="masukan jumlah keseluruhan bit" class="form-control" name="jumlah_keseluruhan_bit" required="required">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary ml-1">
+                                <i class="bx bx-check d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Hitung</span>
+                            </button>
+                            <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                                <i class="bx bx-x d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Batal</span>
+                            </button>
+                        </div>
+                        <?php echo form_close(); ?>
+                    </div>
+                </div>
+            </div>
+
         </section>
     </div>

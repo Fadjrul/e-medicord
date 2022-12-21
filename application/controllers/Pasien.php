@@ -50,6 +50,24 @@ class Pasien extends CI_Controller
         TemplateApp($data, $view, $viewCategory, 'pasien');
     }
 
+    // AVALENCHE EFFECT
+    public function avalen()
+    {
+        csrfValidate();
+        // POST
+        $x = $this->input->post('value_perubahan_bit');
+        $y = $this->input->post('jumlah_keseluruhan_bit');
+        $output = ($x  * 100) / $y;
+
+        // ALERT
+        $alertStatus  = "success";
+        $alertMessage = "Nilai avalanche effect =  " . $output . "%";
+        getAlert($alertStatus, $alertMessage);
+
+        redirect('pasien');
+    }
+
+
     public function create_page()
     {
 
@@ -88,7 +106,7 @@ class Pasien extends CI_Controller
     public function detail_page()
     {
         // ENCRYPT TIME START
-        $execution_time = microtime(true); 
+        $execution_time = microtime(true);
 
         //initialize
         $settings       = getSetting();
@@ -126,18 +144,22 @@ class Pasien extends CI_Controller
                 $data['alamat_pasien'] =  $this->encryption->decrypt($data['pasien'][0]->alamat_pasien);
                 $data['no_telp_pasien'] =  $this->encryption->decrypt($data['pasien'][0]->no_telp_pasien);
             } else {
-                // SPECK-128
-                $keys = $settings[0]->setting_key_speck;
+                // CAMELLIA-128 
+                $key = $settings[0]->setting_key_camellia;
+                $this->encryption->initialize(
+                    array(
+                        'driver' => 'openssl',
+                        'cipher' => 'camellia-128',
+                        'mode' => 'ecb',
+                        'key' => $key,
+                    )
+                );
 
-                $key_schedule = array(); // declaration of variable Key Expansion
-                $key =  $keys; //example of Key (16 characters or 128 bit)
-                $speck = new _SPECK(); //instantiation 
-                $key_schedule = $speck->expandKey($key, $key_schedule);
-
-                $data['no_telp_pasien'] =  $speck->decrypt($data['pasien'][0]->no_telp_pasien, $key_schedule);
-                $data['alamat_pasien'] =  $speck->decrypt($data['pasien'][0]->alamat_pasien, $key_schedule);
-                $data['nik_pasien'] =  $speck->decrypt($data['pasien'][0]->nik_pasien, $key_schedule);
-                $data['no_kk'] = $speck->decrypt($data['pasien'][0]->no_kk, $key_schedule);
+                //decrypt
+                $data['nik_pasien'] =  $this->encryption->decrypt($data['pasien'][0]->nik_pasien);
+                $data['no_kk'] =  $this->encryption->decrypt($data['pasien'][0]->no_kk);
+                $data['alamat_pasien'] =  $this->encryption->decrypt($data['pasien'][0]->alamat_pasien);
+                $data['no_telp_pasien'] =  $this->encryption->decrypt($data['pasien'][0]->no_telp_pasien);
             }
 
             // ENCRYPT TIME END
@@ -145,14 +167,13 @@ class Pasien extends CI_Controller
 
             // ALERT
             $alertStatus  = "success";
-            $alertMessage = "Waktu dekripsi data : ". $encrypttime. " milisecond";
+            $alertMessage = "Waktu dekripsi data : " . $encrypttime . " milisecond";
             getAlert($alertStatus, $alertMessage);
 
             // TEMPLATE
             $view         = "pasien/detail";
             $viewCategory = "all";
             TemplateApp($data, $view, $viewCategory);
-
         } else {;
 
             // ALERT
@@ -172,40 +193,63 @@ class Pasien extends CI_Controller
         //initialize
         $settings       = getSetting();
         $jns_key_id =  $this->input->post('jns_key_id');
-        $key = $settings[0]->setting_key_aes;
         $keys =  $this->input->post('key');
-        $this->encryption->initialize(
-            array(
-                'cipher' => 'aes-128',
-                'mode' => 'ecb',
-                'key' => $key,
-            )
-        );
-
         $password = $this->verification_key($jns_key_id,    $keys);
 
-        if ($password == 1) {
-            //DATA
-            $data['setting']       = getSetting();
-            $data['title']         = 'Ubah Data';
-            $data['pasien']        = $this->m_pasien->get($this->uri->segment(3));
-            $data['status_pasien']  = $this->m_status_pasien->read('', '', '');
-            $data['kepesertaan_pasien']  = $this->m_kepesertaan_pasien->read('', '', '');
-            $data['jns_key']  = $this->m_jns_key->read('', '', '');
-            $data['pasiens']       = $this->m_pasien->read('', '', '', '', '', '', '');
+        //DATA
+        $data['setting']       = getSetting();
+        $data['title']         = 'Ubah Data';
+        $data['pasien']        = $this->m_pasien->get($this->uri->segment(3));
+        $data['status_pasien']  = $this->m_status_pasien->read('', '', '');
+        $data['kepesertaan_pasien']  = $this->m_kepesertaan_pasien->read('', '', '');
+        $data['jns_key']  = $this->m_jns_key->read('', '', '');
+        $data['pasiens']       = $this->m_pasien->read('', '', '', '', '', '', '');
 
-            //decrypt
-            $data['nik_pasien'] =  $this->encryption->decrypt($data['pasien'][0]->nik_pasien);
-            $data['no_kk'] =  $this->encryption->decrypt($data['pasien'][0]->no_kk);
-            $data['alamat_pasien'] =  $this->encryption->decrypt($data['pasien'][0]->alamat_pasien);
-            $data['no_telp_pasien'] =  $this->encryption->decrypt($data['pasien'][0]->no_telp_pasien);
-            
+        if ($password == 1) {
+
+            if ($jns_key_id == 1) {
+
+                $key = $settings[0]->setting_key_aes;
+                $this->encryption->initialize(
+                    array(
+                        'driver' => 'openssl',
+                        'cipher' => 'aes-128',
+                        'mode' => 'ecb',
+                        'key' => $key,
+                    )
+                );
+
+                //decrypt
+                $data['nik_pasien'] =  $this->encryption->decrypt($data['pasien'][0]->nik_pasien);
+                $data['no_kk'] =  $this->encryption->decrypt($data['pasien'][0]->no_kk);
+                $data['alamat_pasien'] =  $this->encryption->decrypt($data['pasien'][0]->alamat_pasien);
+                $data['no_telp_pasien'] =  $this->encryption->decrypt($data['pasien'][0]->no_telp_pasien);
+            } else {
+
+                $key = $settings[0]->setting_key_camellia;
+                $this->encryption->initialize(
+                    array(
+                        'driver' => 'openssl',
+                        'cipher' => 'camellia-128',
+                        'mode' => 'ecb',
+                        'key' => $key,
+                    )
+                );
+
+                //decrypt
+                $data['nik_pasien'] =  $this->encryption->decrypt($data['pasien'][0]->nik_pasien);
+                $data['no_kk'] =  $this->encryption->decrypt($data['pasien'][0]->no_kk);
+                $data['alamat_pasien'] =  $this->encryption->decrypt($data['pasien'][0]->alamat_pasien);
+                $data['no_telp_pasien'] =  $this->encryption->decrypt($data['pasien'][0]->no_telp_pasien);
+            }
+
+
             // ENCRYPT TIME END
             $encrypttime = microtime(true) - $execution_time;
 
             // ALERT
             $alertStatus  = "success";
-            $alertMessage = "Waktu dekripsi data : ". $encrypttime. " milisecond";
+            $alertMessage = "Waktu dekripsi data : " . $encrypttime . " milisecond";
             getAlert($alertStatus, $alertMessage);
 
             // TEMPLATE
@@ -273,6 +317,7 @@ class Pasien extends CI_Controller
             $key = $settings[0]->setting_key_aes;
             $this->encryption->initialize(
                 array(
+                    'driver' => 'openssl',
                     'cipher' => 'aes-128',
                     'mode' => 'ecb',
                     'key' => $key,
@@ -292,12 +337,16 @@ class Pasien extends CI_Controller
         }
         //set encryption speck
         else {
-            $keys = $settings[0]->setting_key_speck;
+            $keys = $settings[0]->setting_key_camellia;
 
-            $key_schedule = array(); // declaration of variable Key Expansion
-            $key = $keys; //example of Key (16 characters or 128 bit)
-            $speck = new _SPECK(); //instantiation 
-            $key_schedule = $speck->expandKey($key, $key_schedule); //Create Key Expansion
+            $this->encryption->initialize(
+                array(
+                    'driver' => 'openssl',
+                    'cipher' => 'camellia-128',
+                    'mode' => 'ecb',
+                    'key' => $keys,
+                )
+            );
 
             //POST
             $no_telp_pasien = $this->input->post('no_telp_pasien');
@@ -305,11 +354,16 @@ class Pasien extends CI_Controller
             $nik_pasien = $this->input->post('nik_pasien');
             $no_kk = $this->input->post('no_kk');
 
-            //encpryt_speck
-            $data['no_telp_pasien'] =  $speck->encrypt($no_telp_pasien, $key_schedule);
-            $data['alamat_pasien'] =  $speck->encrypt($alamat_pasien, $key_schedule);
-            $data['nik_pasien'] =  $speck->encrypt($nik_pasien, $key_schedule);
-            $data['no_kk'] = $speck->encrypt($no_kk, $key_schedule);
+            //encpryt_camelia
+            $data['no_telp_pasien'] = $this->encryption->encrypt($no_telp_pasien);
+            $data['alamat_pasien'] = $this->encryption->encrypt($alamat_pasien);
+            $data['nik_pasien'] = $this->encryption->encrypt($nik_pasien);
+            $data['no_kk'] = $this->encryption->encrypt($no_kk);
+
+            echo "<pre>";
+            print_r($data['no_kk']);
+            echo "</pre>";
+            die;
         }
 
 
@@ -336,18 +390,18 @@ class Pasien extends CI_Controller
         $encrypttime = microtime(true) - $execution_time;
 
         // Count chars encrypt
-        $data['strArray'] = count_chars($data['nik_pasien'],1);
-        $data['strArray2'] = count_chars($data['no_kk'],1);
-        $data['strArray3'] = count_chars($data['no_telp_pasien'],1);
-        $data['strArray4'] = count_chars($data['alamat_pasien'],1);
+        $data['strArray'] = count_chars($data['nik_pasien'], 1);
+        $data['strArray2'] = count_chars($data['no_kk'], 1);
+        $data['strArray3'] = count_chars($data['no_telp_pasien'], 1);
+        $data['strArray4'] = count_chars($data['alamat_pasien'], 1);
 
         // LOG
-        $message    = $this->session->userdata('user_fullname')." menambah data pasien dengan ID - nama : ".$data['pasien_id']." - ".$data['nama_pasien'];
-        createLog($message);   
+        $message    = $this->session->userdata('user_fullname') . " menambah data pasien dengan ID - nama : " . $data['pasien_id'] . " - " . $data['nama_pasien'];
+        createLog($message);
 
         // ALERT
         $alertStatus  = "success";
-        $alertMessage = "Berhasil menambah data pasien dengan nama : " . $data['nama_pasien']. " | Waktu enkripsi data : ". $encrypttime. " milisecond";
+        $alertMessage = "Berhasil menambah data pasien dengan nama : " . $data['nama_pasien'] . " | Waktu enkripsi data : " . $encrypttime . " milisecond";
         getAlert($alertStatus, $alertMessage);
 
         redirect('pasien');
@@ -385,7 +439,6 @@ class Pasien extends CI_Controller
             $data['alamat_pasien'] = $this->encryption->encrypt($alamat_pasien);
             $data['nik_pasien'] = $this->encryption->encrypt($nik_pasien);
             $data['no_kk'] = $this->encryption->encrypt($no_kk);
-            
         }
         //set encryption speck
         else {
@@ -401,7 +454,7 @@ class Pasien extends CI_Controller
             $alamat_pasien = $this->input->post('alamat_pasien');
             $nik_pasien = $this->input->post('nik_pasien');
             $no_kk = $this->input->post('no_kk');
-            
+
             //encpryt_speck
             $data['no_telp_pasien'] =  $speck->encrypt($no_telp_pasien, $key_schedule);
             $data['alamat_pasien'] =  $speck->encrypt($alamat_pasien, $key_schedule);
@@ -428,11 +481,11 @@ class Pasien extends CI_Controller
         $encrypttime = microtime(true) - $execution_time;
 
         // LOG
-        $message    = $this->session->userdata('user_fullname')." mengubah data pasien : ".$data['pasien_id']." - ".$data['nama_pasien'];
+        $message    = $this->session->userdata('user_fullname') . " mengubah data pasien : " . $data['pasien_id'] . " - " . $data['nama_pasien'];
 
         // ALERT
         $alertStatus  = "success";
-        $alertMessage = "Berhasil mengubah data pasien dengan nama : " . $data['nama_pasien'] . " | Waktu enkripsi data : ". $encrypttime. " milisecond";
+        $alertMessage = "Berhasil mengubah data pasien dengan nama : " . $data['nama_pasien'] . " | Waktu enkripsi data : " . $encrypttime . " milisecond";
         getAlert($alertStatus, $alertMessage);
 
         redirect('pasien');
@@ -446,7 +499,7 @@ class Pasien extends CI_Controller
         $this->m_pasien->delete($this->input->post('pasien_id'));
 
         // LOG
-        $message    = $this->session->userdata('user_fullname')." menghapus data pasien dengan ID : ".$this->input->post('pasien_id');
+        $message    = $this->session->userdata('user_fullname') . " menghapus data pasien dengan ID : " . $this->input->post('pasien_id');
         createLog($message);
 
         // ALERT
