@@ -40,7 +40,7 @@
                     <div class="row p-4" id="table-hover-row">
                         <div class="col-12">
                             <div class="table-responsive">
-                                <table class="table table-hover" id="DataTable">
+                                <table class="table table-hover" id="table1">
                                     <thead>
                                         <tr>
                                             <th>No.</th>
@@ -58,7 +58,7 @@
 
                                         ?>
                                                 <tr>
-                                                    <td><?php echo $no + $numbers; ?></td>
+                                                    <td><?php echo $no; ?></td>
                                                     <td><a href="<?php echo base_url()."upload/gallery/photo/".$key->gallery_photo_name;?>" target="_blank" ><?php echo $key->gallery_photo_name;?></a></td>
                                                     <td><?php echo $key->gallery_photo_token;?></td>
                                                     <td>

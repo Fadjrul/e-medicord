@@ -6,7 +6,7 @@ class Content extends CI_Controller {
         $this->load->model('m_content');
         $this->load->library('upload');
 
-        if (!$this->session->userdata('user_id') OR $this->session->userdata('user_group')!=1) {
+        if (!($this->session->userdata('user_id'))) {
 			// ALERT
 			$alertStatus  = 'failed';
 			$alertMessage = 'Anda tidak memiliki Hak Akses atau Session anda sudah habis';
@@ -59,7 +59,7 @@ class Content extends CI_Controller {
                     $this->m_content->update($data);
         
                     // LOG
-                    $message    = $this->session->userdata('user_name')." mengubah data konten profil puskesmas menu = ".$this->input->post('content_menu');
+                    $message    = $this->session->userdata('user_fullname')." mengubah data konten profil puskesmas menu : ".$this->input->post('content_menu');
                     createLog($message);
         
                     // ALERT
@@ -75,7 +75,7 @@ class Content extends CI_Controller {
                 $this->m_content->update($data);
 
                 // LOG
-                $message    = $this->session->userdata('user_name')." mengubah data konten profil puskesmas dengan ID = ".$this->input->post('content_menu');
+                $message    = $this->session->userdata('user_name')." mengubah data konten profil puskesmas menu : ".$this->input->post('content_menu');
                 createLog($message);
 
                 // ALERT
@@ -91,7 +91,7 @@ class Content extends CI_Controller {
             $this->m_content->update($data);
 
             // LOG
-            $message    = $this->session->userdata('user_name')." mengubah data konten profil puskesmas dengan ID = ".$this->input->post('content_menu');
+            $message    = $this->session->userdata('user_name')." mengubah data konten profil puskesmas dengan ID : ".$this->input->post('content_menu');
             createLog($message);
 
             // ALERT

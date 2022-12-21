@@ -38,8 +38,8 @@
                     <div class="row p-4">
                         <div class="col-12">
                             <div class="table-responsive">
-                                <table class="table table-striped" id="DataTable">
-                                    <thead>
+                                <table class="table table-striped" id="table1">
+                                    <thead class="text-center">
                                         <tr>
                                             <th>No.</th>
                                             <th>Pesan</th>
@@ -58,7 +58,7 @@
 
                                         ?>
                                                 <tr>
-                                                    <td><?php echo $no + $numbers; ?></td>
+                                                    <td><?php echo $no; ?></td>
                                                     <td><?php echo $key->log_message;?></td>
                                                     <td><?php echo $key->log_time;?></td>
                                                     <td><?php echo $key->user_name;?></td>

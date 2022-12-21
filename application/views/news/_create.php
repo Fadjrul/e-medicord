@@ -31,7 +31,6 @@
                 <div class="card-content">
                     <div class="row me-4 mt-4">
                         <div class="col-md-12 col-12 text-end">
-                            <a href="<?php echo site_url('news/create_page')?>" class="btn btn-primary btn-sm" title="Tambah data"><i class="fas fa-plus"></i> Tambah</a>
                             <a href="<?php echo site_url('news')?>" class="btn btn-warning btn-sm" title="kembali ke halaman sebelumnya"><i class="bi bi-arrow-left"></i> kembali</a>
                         </div>
                     </div>
@@ -81,6 +80,9 @@
                                     <div class="form-group">
                                         <label><b>Isi Informasi <span style="color:red">*</span></b></label>
                                         <textarea cols="80" id="dark" name="news_text" rows="10" style="resize:none;max-width:700px;"></textarea>
+                                    </div>
+                                    <div class="form-group mt-3 text-end">
+                                        <button type="submit" class="btn btn-primary btn-sm" title="Tambah data"><i class="bi bi-save2"></i> Simpan</button>
                                     </div>
                                 </form>
                             <?php echo form_close(); ?>

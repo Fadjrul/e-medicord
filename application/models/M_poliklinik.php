@@ -6,13 +6,17 @@ class M_poliklinik extends CI_Model {
         parent::__construct();
     }
     
-    public function read($limit, $start, $key) {
+    public function read($limit, $start, $key, $poliklinik_id) {
         $this->db->select('*');
         $this->db->from('tbl_poliklinik');
+
+        if($poliklinik_id !=""){
+            $this->db->where('poliklinik_id', $poliklinik_id);
+        }
         
         if($key!=''){
             $this->db->like("nama_poliklinik", $key);
-            $this->db->like("gedung", $key);
+            $this->db->or_like("gedung", $key);
         }
 
         if($limit !="" OR $start !=""){

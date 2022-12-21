@@ -3,14 +3,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Gallery extends CI_Controller {
     public function __construct() {
         parent::__construct();
+        // LOAD MODEL & LIBRARY
         $this->load->model('m_gallery');
         $this->load->library('upload');
-        if (!$this->session->userdata('user_id') OR $this->session->userdata('user_group')!=1) {
+        // SESSION
+        if (!($this->session->userdata('user_id'))) {
 			// ALERT
 			$alertStatus  = 'failed';
 			$alertMessage = 'Anda tidak memiliki Hak Akses atau Session anda sudah habis';
 			getAlert($alertStatus, $alertMessage);
-			redirect('dashboard');
+			redirect('auth');
 		}
     }
     
@@ -21,25 +23,10 @@ class Gallery extends CI_Controller {
      * ---------------------------------------------------------------------
      */
     public function data() {
-        $this->session->unset_userdata('sess_search_gallery');
-
-        // PAGINATION
-        $baseUrl    = base_url() . "gallery/data/photo/";
-        $totalRows  = count((array) $this->m_gallery->read('','','',$this->uri->segment(3)));
-        $perPage    = $this->session->userdata('sess_rowpage');
-        $uriSegment = 5;
-        $paging     = generatePagination($baseUrl, $totalRows, $perPage, $uriSegment);
-        $page       = ($this->uri->segment($uriSegment)) ? $this->uri->segment($uriSegment) : 0;
-        
-        $data['numbers']    = $paging['numbers'];
-        $data['links']      = $paging['links'];
-        $data['total_data'] = $totalRows ;
-        
-
-        
+   
         //DATA
         $data['setting'] = getSetting();
-        $data['gallery'] = $this->m_gallery->read($perPage, $page,'', $this->uri->segment(3));
+        $data['gallery'] = $this->m_gallery->read('', '', '', $this->uri->segment(3));
 
 
         if($this->uri->segment(3) == 'photo'){
@@ -50,44 +37,6 @@ class Gallery extends CI_Controller {
             $view            = "gallery/video";
         }
         
-        
-        // TEMPLATE
-		$viewCategory = "all";
-		TemplateApp($data, $view, $viewCategory);
-    }
-    
-
-    public function search() {
-        if ($this->input->post('key')) {
-            $data['search'] = $this->input->post('key');
-            $this->session->set_userdata('sess_search_gallery', $data['search']);
-        } else {
-            $data['search'] = $this->session->userdata('sess_search_gallery');
-        }
-        
-        // PAGINATION
-        $baseUrl    = base_url() . "gallery/search/".$this->uri->segment(3)."/".$data['search']."/";
-        $totalRows  = count((array)$this->m_gallery->read('','',$data['search'], $this->uri->segment(3) ));
-        $perPage    = $this->session->userdata('sess_rowpage');
-        $uriSegment = 6;
-        $paging     = generatePagination($baseUrl, $totalRows, $perPage, $uriSegment);
-        $page       = ($this->uri->segment($uriSegment)) ? $this->uri->segment($uriSegment) : 0;
-        
-        $data['numbers']    = $paging['numbers'];
-        $data['links']      = $paging['links'];
-        $data['total_data'] = $totalRows ;
-        
-        //DATA
-        $data['setting'] = getSetting();
-        $data['gallery'] = $this->m_gallery->read($perPage, $page, $data['search'], $this->uri->segment(3));
-
-        if($this->uri->segment(4) == 'photo'){
-            $data['title']   = 'Galeri Foto';
-            $view            = "gallery/gallery";
-        }else{
-            $data['title']   = 'Galeri Video';
-            $view            = "gallery/video";
-        }
         
         // TEMPLATE
 		$viewCategory = "all";
@@ -138,12 +87,12 @@ class Gallery extends CI_Controller {
                 $this->m_gallery->create($data);
 
                 // LOG
-                $message    = $this->session->userdata('user_name')." menambah data galeri dengan nama = ".$data['gallery_name'];
+                $message    = $this->session->userdata('user_fullname')." menambah data galeri dengan nama : ".$data['gallery_name'];
                 createLog($message);
 
                 // ALERT
                 $alertStatus  = "success";
-                $alertMessage = "Berhasil menambah data galeri dengan nama = ".$data['gallery_name'];
+                $alertMessage = "Berhasil menambah data galeri dengan nama : ".$data['gallery_name'];
                 getAlert($alertStatus, $alertMessage);
             }
         }else{
@@ -160,12 +109,12 @@ class Gallery extends CI_Controller {
             $this->m_gallery->create($data);
 
             // LOG
-            $message    = $this->session->userdata('user_name')." menambah data galeri dengan nama = ".$data['gallery_name'];
+            $message    = $this->session->userdata('user_fullname')." menambah data galeri dengan nama : ".$data['gallery_name'];
             createLog($message);
 
             // ALERT
             $alertStatus  = "success";
-            $alertMessage = "Berhasil menambah data galeri dengan nama = ".$data['gallery_name'];
+            $alertMessage = "Berhasil menambah data galeri dengan nama : ".$data['gallery_name'];
             getAlert($alertStatus, $alertMessage);
         }
 
@@ -215,12 +164,12 @@ class Gallery extends CI_Controller {
                 $this->m_gallery->update($data);
 
                 // LOG
-                $message    = $this->session->userdata('user_name')." menambah data galeri dengan ID = ".$data['gallery_id'];
+                $message    = $this->session->userdata('user_fullname')." menambah data galeri dengan ID - nama : ".$data['gallery_id']." - ".$data['gallery_name'];
                 createLog($message);
 
                 // ALERT
                 $alertStatus  = "success";
-                $alertMessage = "Berhasil menambah data galeri ".$data['gallery_id'];
+                $alertMessage = "Berhasil menambah data galeri dengan nama ".$data['gallery_name'];
                 getAlert($alertStatus, $alertMessage);
             }
         }else{
@@ -235,12 +184,12 @@ class Gallery extends CI_Controller {
             $this->m_gallery->update($data);
 
             // LOG
-            $message    = $this->session->userdata('user_name')." mengubah data galeri dengan ID = ".$data['gallery_id'];
+            $message    = $this->session->userdata('user_fullname')." mengubah data galeri dengan ID - nama : ".$data['gallery_id']." - ".$data['gallery_name'];
             createLog($message);
 
             // ALERT
             $alertStatus  = "success";
-            $alertMessage = "Berhasil mengubah data galeri dengan ID = ".$data['gallery_id'];
+            $alertMessage = "Berhasil mengubah data galeri dengan nama : ".$data['gallery_name'];
             getAlert($alertStatus, $alertMessage);
         }
 
@@ -270,15 +219,15 @@ class Gallery extends CI_Controller {
         
 
         // LOG
-        $message    = $this->session->userdata('user_name')." menghapus data galeri dengan ID = ".$this->input->post('gallery_id')." - ".$this->input->post('gallery_id');
+        $message    = $this->session->userdata('user_fullname')." menghapus data galeri dengan ID : ".$this->input->post('gallery_id');
         createLog($message);
 
         // ALERT
         $alertStatus  = "failed";
-        $alertMessage = "Menghapus data galeri : ".$this->input->post('gallery_id');
+        $alertMessage = "Menghapus data galeri dengan ID : ".$this->input->post('gallery_id');
         getAlert($alertStatus, $alertMessage);
 
-        redirect('gallery/data/'.$this->input->post('gallery_type'));
+        redirect('gallery/data/'.$this->uri->segment(3));
     }
 
     /**
@@ -288,26 +237,11 @@ class Gallery extends CI_Controller {
      */
 
     public function all_photo() {
-        $this->session->unset_userdata('sess_search_allphoto');
-
-        // PAGINATION
-        $baseUrl    = base_url() . "gallery/allphoto/".$this->uri->segment(3)."/";
-        $totalRows  = count((array) $this->m_gallery->read_gallery('','','', $this->uri->segment(3)));
-        $perPage    = $this->session->userdata('sess_rowpage');
-        $uriSegment = 5;
-        $paging     = generatePagination($baseUrl, $totalRows, $perPage, $uriSegment);
-        $page       = ($this->uri->segment($uriSegment)) ? $this->uri->segment($uriSegment) : 0;
-        
-        $data['numbers']    = $paging['numbers'];
-        $data['links']      = $paging['links'];
-        $data['total_data'] = $totalRows ;
-        
-
         
         //DATA
         $data['setting']      = getSetting();
         $data['title']        = 'Galeri Foto : ';
-        $data['allphoto']     = $this->m_gallery->read_gallery($perPage, $page,'', $this->uri->segment(3));
+        $data['allphoto']     = $this->m_gallery->read_gallery('', '', '', $this->uri->segment(3));
         $data['gallery_name'] = $this->m_gallery->get($this->uri->segment(3));
 		
         
@@ -336,7 +270,7 @@ class Gallery extends CI_Controller {
         unlink('./upload/gallery/photo/'.$this->input->post('gallery_photo_name'));
         
         // LOG
-        $message    = $this->session->userdata('user_name')." menghapus data form dengan ID = ".$this->input->post('gallery_photo_id');
+        $message    = $this->session->userdata('user_fullname')." menghapus data form dengan ID : ".$this->input->post('gallery_photo_id');
         createLog($message);
 
         // ALERT

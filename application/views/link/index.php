@@ -15,6 +15,7 @@
                 </nav>
             </div>
         </div>
+        <!-- Alert -->
         <?php
         if ($this->session->flashdata('alert')) {
             echo $this->session->flashdata('alert');
@@ -83,10 +84,10 @@
                     </div>
 
                     <!-- data tabel -->
-                    <div class="row p-4" id="table-hover-row">
+                    <div class="row p-4">
                         <div class="col-12">
                             <div class="table-responsive">
-                                <table class="table table-hover" id="DataTable">
+                                <table class="table table-hover" id="table1">
                                     <thead>
                                         <tr>
                                             <th>No.</th>
@@ -105,7 +106,7 @@
 
                                         ?>
                                                 <tr>
-                                                    <td><?php echo $no + $numbers; ?></td>
+                                                    <td><?php echo $no; ?></td>
                                                     <td><?php echo $key->link_name;?></td>
                                                     <td><?php echo $key->link_url;?></td>
                                                     <td><a href="<?php echo base_url()."upload/link/".$key->link_image;?>" target="_blank" ><?php echo $key->link_image;?></a></td>

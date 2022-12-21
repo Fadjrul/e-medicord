@@ -13,6 +13,9 @@ class M_gallery extends CI_Model {
         
         if($key!=''){
             $this->db->like("gallery_name", $key);
+            $this->db->or_like("gallery_description", $key);
+            $this->db->or_like("gallery_date", $key);
+            $this->db->or_like("gallery_url", $key);
         }
 
         if($limit !="" OR $start !=""){

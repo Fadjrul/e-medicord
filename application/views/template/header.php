@@ -17,6 +17,10 @@
     <link rel="stylesheet" href="<?php echo base_url();?>assets/core-thirdparty/dropzone/dist/dropzone.css">
     <link rel="stylesheet" href="<?php echo base_url();?>assets/core-thirdparty/dropzone/dist/basic.css">
     <link rel="stylesheet" href="<?php echo base_url();?>assets/extensions/choices.js/public/assets/styles/choices.css">
+
+    <link rel="stylesheet" href="<?php echo base_url();?>assets/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="<?php echo base_url();?>assets/css/pages/datatables.css">
+
     <style type="text/css">
         .sidebar-wrapper .menu .sidebar-item.active a {
             background-color: #0dcaf0 !important; 

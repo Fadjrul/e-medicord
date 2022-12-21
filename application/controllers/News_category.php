@@ -4,37 +4,22 @@ class News_category extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('m_news_category');
-        if (!$this->session->userdata('user_id') OR $this->session->userdata('user_group')!=1) {
+        if (!($this->session->userdata('user_id'))) {
 			// ALERT
 			$alertStatus  = 'failed';
 			$alertMessage = 'Anda tidak memiliki Hak Akses atau Session anda sudah habis';
 			getAlert($alertStatus, $alertMessage);
-			redirect('dashboard');
+			redirect('auth');
 		}
     }
     
 
     public function index() {
-        $this->session->unset_userdata('sess_search_news_category');
-
-        // PAGINATION
-        $baseUrl    = base_url() . "news_category/index/";
-        $totalRows  = count((array) $this->m_news_category->read('','',''));
-        $perPage    = $this->session->userdata('sess_rowpage');
-        $uriSegment = 3;
-        $paging     = generatePagination($baseUrl, $totalRows, $perPage, $uriSegment);
-        $page       = ($this->uri->segment($uriSegment)) ? $this->uri->segment($uriSegment) : 0;
-        
-        $data['numbers']    = $paging['numbers'];
-        $data['links']      = $paging['links'];
-        $data['total_data'] = $totalRows ;
-        
-
-        
+       
         //DATA
         $data['setting']       = getSetting();
         $data['title']         = 'Kategori Informasi';
-        $data['news_category'] = $this->m_news_category->read($perPage, $page,'');
+        $data['news_category'] = $this->m_news_category->read('', '', '');
 		
         
         // TEMPLATE
@@ -42,39 +27,7 @@ class News_category extends CI_Controller {
 		$viewCategory = "all";
 		TemplateApp($data, $view, $viewCategory);
     }
-    
-
-    public function search() {
-        if ($this->input->post('key')) {
-            $data['search'] = $this->input->post('key');
-            $this->session->set_userdata('sess_search_news_category', $data['search']);
-        } else {
-            $data['search'] = $this->session->userdata('sess_search_news_category');
-        }
         
-        // PAGINATION
-        $baseUrl    = base_url() . "news_category/search/".$data['search']."/";
-        $totalRows  = count((array)$this->m_news_category->read('','',$data['search']));
-        $perPage    = $this->session->userdata('sess_rowpage');
-        $uriSegment = 3;
-        $paging     = generatePagination($baseUrl, $totalRows, $perPage, $uriSegment);
-        $page       = ($this->uri->segment($uriSegment)) ? $this->uri->segment($uriSegment) : 0;
-        
-        $data['numbers']    = $paging['numbers'];
-        $data['links']      = $paging['links'];
-        $data['total_data'] = $totalRows ;
-        
-        //DATA
-        $data['setting']       = getSetting();
-        $data['title']         = 'Kategori Informasi';
-        $data['news_category'] = $this->m_news_category->read($perPage, $page, $data['search']);
-        
-        // TEMPLATE
-		$view         = "news/news_category";
-		$viewCategory = "all";
-		TemplateApp($data, $view, $viewCategory);
-    }
-    
 
     public function create() {
         csrfValidate();
@@ -85,7 +38,7 @@ class News_category extends CI_Controller {
         $this->m_news_category->create($data);
 
         // LOG
-        $message    = $this->session->userdata('user_name')." menambah data kategori informasi ".$data['news_category_name'];
+        $message    = $this->session->userdata('user_fullname')." menambah data kategori informasi ".$data['news_category_name'];
         createLog($message);
 
         // ALERT
@@ -105,7 +58,7 @@ class News_category extends CI_Controller {
         $this->m_news_category->update($data);
 
         // LOG
-        $message    = $this->session->userdata('user_name')." mengubah data kategori informasi dengan ID = ".$data['news_category_id']." - ".$data['news_category_name'];
+        $message    = $this->session->userdata('user_fullname')." mengubah data kategori informasi dengan ID - nama = ".$data['news_category_id']." - ".$data['news_category_name'];
         createLog($message);
 
         // ALERT
@@ -123,12 +76,12 @@ class News_category extends CI_Controller {
         $this->m_news_category->delete($this->input->post('news_category_id'));
         
         // LOG
-        $message    = $this->session->userdata('user_name')." menghapus data kategori informasi dengan ID = ".$this->input->post('news_category_id')." - ".$this->input->post('news_category_name');
+        $message    = $this->session->userdata('user_name')." menghapus data kategori informasi dengan ID : ".$this->input->post('news_category_id')." - ".$this->input->post('news_category_name');
         createLog($message);
 
         // ALERT
         $alertStatus  = "failed";
-        $alertMessage = "Menghapus data kategori informasi : ".$this->input->post('news_category_name');
+        $alertMessage = "Menghapus data kategori informasi : ".$this->input->post('news_category_id');
         getAlert($alertStatus, $alertMessage);
 
         redirect('news_category');

@@ -16,6 +16,7 @@
         </div>
         <div class="row">
             <div class="col-12">
+                <!-- ALert -->
                 <?php 
                     if ($this->session->flashdata('alert')) {
                         echo $this->session->flashdata('alert');

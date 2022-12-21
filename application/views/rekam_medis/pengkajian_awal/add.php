@@ -3,19 +3,25 @@
         <div class="row">
             <!-- Page Title -->
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Rekam Medis Pengkajian Awal</h3>
+                <h3><?php echo $title; ?></h3>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <!-- Breadcrumb -->
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="<?php echo site_url('dashboard/index');?>"> Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="<?php echo site_url('pengkajian_awal/index');?>"> Rekam Medis Pengkajian Awal</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Tambah Data</li>
+                        <li class="breadcrumb-item"><a href="<?php echo site_url('dashboard');?>"> Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="<?php echo site_url('pengkajian_awal');?>"> Rekam Medis Pengkajian Awal</a></li>
+                        <li class="breadcrumb-item active" aria-current="page"><?php echo $title; ?></li>
                     </ol>
                 </nav>
             </div>
         </div>
+        <!-- Alert -->
+        <?php
+        if ($this->session->flashdata('alert')) {
+            echo $this->session->flashdata('alert');
+            unset($_SESSION['alert']);
+        } ?>
     </div>
 
     <!-- Page content -->
@@ -54,7 +60,7 @@
                                         <h4>REKAM MEDIS KLIEN RAWAT JALAN PENGKAJIAN AWAL</h4>
                                     </div>
                                     <div class="col-md-6 col-12 border text-center">
-                                        <h4>NO. REKAM MEDIS</h4>
+                                        <h4>NO. REKAM MEDIS <br> <?php echo $pasien[0]->no_rekam_medis; ?></h4>
                                     </div>
                                 </div>
                             </div>
@@ -62,35 +68,66 @@
                                 <?php echo form_open_multipart("pengkajian_awal/create")?>
                                     <form class="form">
                                         <div class="row table-responsive">
-                                            <table cellpadding="5" class="table-borderless border-start border-end border-top border-bottom">
+                                            <table cellpadding="6" class="table-borderless border-start border-end border-top border-bottom">
                                                 <tr>
                                                     <td><label for="nama_pasien">Nama Lengkap</label></td>
-                                                    <td><?php echo csrf();?>
-                                                        <input type="text" id="nama_pasien" class="form-control"
-                                                            placeholder="Nama Pasien" name="nama_pasien" required="required">
+                                                    <td>
+                                                        <?php echo csrf();?>
+                                                        <input type="hidden" class="form-control" name="user_id" required="required" value="<?php echo $user[0]->user_id; ?>">
+                                                        <input type="hidden" class="form-control" name="pegawai_id" required="required" value="<?php echo $pegawai[0]->pegawai_id; ?>">
+                                                        <input type="hidden" class="form-control" name="jns_key_id" required="required" value="<?php echo $jns_key[0]->jns_key_id; ?>">
+                                                        <input type="hidden" id="pasien_id" class="form-control" name="pasien_id" required="required" value="<?php echo $pasien[0]->pasien_id; ?>">
+                                                        : <?php echo $pasien[0]->nama_pasien; ?>
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start"><label for="nama_petugas">Nama Petugas</label></td>
                                                     <td>
-                                                        <input type="text" id="nama_petugas" class="form-control"
-                                                            placeholder="Nama Petugas" name="nama_pegawai" required="required">
+                                                        <select class="choices form-select" name="pegawai_id">
+                                                            <option selected>- Pilih Petugas - </option>
+                                                            <?php
+                                                                foreach($pegawai as $pe){
+                                                                    if($pengkajian_awal[0]->pegawai_id == $pe->pegawai_id){
+                                                                        echo '<option value="'.$pe->pegawai_id.'">'.$pe->nama_pegawai.' | '.$pe->keterangan.'</option>';
+                                                                    }else{
+                                                                        echo '<option value="'.$pe->pegawai_id.'">'.$pe->nama_pegawai.' | '.$pe->keterangan.'</option>';
+                                                                    }
+                                                                }
+                                                            ?>
+                                                        </select>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td><label for="tgl_lahir_pasien">Tanggal Lahir</label></td>
                                                     <td>
-                                                        <input type="date" id="tgl_lahir_pasien" class="form-control" name="tgl_lahir_pasien"  required="required">
+                                                        : <?php echo indonesiaDate($pasien[0]->tgl_lahir_pasien); ?>
                                                     </td>
                                                     <td class="text-center">
-                                                        <input class="form-check-input" type="radio" name="jenis_kelamin" id="Laki-laki" value="Laki-laki" checked>
-                                                        <label for="Laki-laki">L</label>  / 
-                                                        <input class="form-check-input" type="radio" name="jenis_kelamin" value="Perempuan" id="Perempuan">
-                                                        <label for="Perempuan">P</label>
+                                                        <?php
+                                                        $l = 'Laki-laki';
+                                                        if ($l == $pasien[0]->jenis_kelamin) {
+                                                            echo '<input class="form-check-input" type="radio" name="jenis_kelamin" id="Laki-laki" value="Laki-laki" checked>
+                                                                    <label for="Laki-laki">L </label>';
+                                                        } else {
+                                                            echo '<input class="form-check-input" type="radio" name="jenis_kelamin" id="Laki-laki" value="Laki-laki">
+                                                                    <label for="Laki-laki">L </label>';
+                                                        }
+
+                                                        ?>
+                                                        <?php
+                                                        $p = 'Perempuan';
+                                                        if ($p == $pasien[0]->jenis_kelamin) {
+                                                            echo '/ <input class="form-check-input" type="radio" name="jenis_kelamin" value="Perempuan" id="Perempuan" checked>
+                                                                    <label for="Perempuan">P</label>';
+                                                        } else {
+                                                            echo '/ <input class="form-check-input" type="radio" name="jenis_kelamin" value="Perempuan" id="Perempuan">
+                                                                    <label for="Perempuan">P</label>';
+                                                        }
+
+                                                        ?>
                                                     </td>
                                                     <td class="border-start"><label for="tgl_periksa">Tanggal Periksa</label></td>
                                                     <td>
-                                                        <input type="date" id="tgl_periksa" class="form-control"
-                                                            name="tgl_periksa" required="required">
+                                                        : <?php echo indonesiaDate($pasien[0]->tgl_daftar); ?>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -154,7 +191,7 @@
                                                         <input type="text" id="gcs" class="form-control input-border-bottom" name="gcs">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_fisik" value="hipotermi" id="hipotermi">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_fisik[]" value="hipotermi" id="hipotermi">
                                                         <label class="form-check-label" for="hipotermi">hipotermi</label>
                                                     </td>
                                                 </tr>
@@ -176,8 +213,8 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_fisik" value="hipetermi" id="hiptermi">
-                                                        <label class="form-check-label" for="hiptermi">hipetermi</label>
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_fisik[]" value="hipetermi" id="hipetermi">
+                                                        <label class="form-check-label" for="hipetermi">hipetermi</label>
                                                     </td>
                                                 </tr>
                                                 <tr class="border-bottom">
@@ -212,19 +249,19 @@
                                                         <label>a. Keluhan</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_pernafasan" value="sesak" id="sesak">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_pernafasan[]" value="sesak" id="sesak">
                                                         <label class="form-check-label" for="sesak">sesak</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_pernafasan" value="nyeri" id="nyeri">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_pernafasan[]" value="nyeri" id="nyeri">
                                                         <label class="form-check-label" for="nyeri">nyeri</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_pernafasan" value="batuk" id="batuk">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_pernafasan[]" value="batuk" id="batuk">
                                                         <label class="form-check-label" for="batuk">batuk</label>
                                                     </td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_pernafasan" value="Gangguan pola nafas" id="gangguan_pola_nafas">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_pernafasan[]" value="Gangguan pola nafas" id="gangguan_pola_nafas">
                                                         <label class="form-check-label" for="gangguan_pola_nafas">Gangguan pola nafas</label>
                                                     </td>
                                                 </tr>
@@ -242,7 +279,7 @@
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_pernafasan" value="Gangguan Pertukaran Gas" id="gangguan_pertukaran_gas">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_pernafasan[]" value="Gangguan Pertukaran Gas" id="gangguan_pertukaran_gas">
                                                         <label class="form-check-label" for="gangguan_pertukaran_gas">Gangguan Pertukaran Gas</label>
                                                     </td>
                                                 </tr>
@@ -251,27 +288,27 @@
                                                         <label>c. Suara Nafas</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="suara_nafas" value="ronchi" id="ronchi">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="suara_nafas[]" value="ronchi" id="ronchi">
                                                         <label class="form-check-label" for="ronchi">ronchi</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="suara_nafas" value="wheezing" id="wheezing">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="suara_nafas[]" value="wheezing" id="wheezing">
                                                         <label class="form-check-label" for="wheezing">wheezing</label>
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_pernafasan" value="Ketidak efektifan jalan napas" id="ketidak_efektifan">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_pernafasan[]" value="Ketidak efektifan jalan napas" id="ketidak_efektifan">
                                                         <label class="form-check-label" for="ketidak_efektifan">Ketidak efektifan jalan napas</label>
                                                     </td>
                                                 </tr>
                                                 <tr class="border-bottom">
                                                     <td></td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="suara_nafas" value="vesikuler" id="vesikuler">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="suara_nafas[]" value="vesikuler" id="vesikuler">
                                                         <label class="form-check-label" for="vesikuler">vesikuler</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="suara_nafas" value="bronchovesikuler" id="bronchovesikuler">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="suara_nafas[]" value="bronchovesikuler" id="bronchovesikuler">
                                                         <label class="form-check-label" for="bronchovesikuler">bronchovesikuler</label>
                                                     </td>
                                                     <td></td>
@@ -297,7 +334,7 @@
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_kardiovaskular" value="Gangguan Tidur" id="gangguan_tidur">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_kardiovaskular[]" value="Gangguan Tidur" id="gangguan_tidur">
                                                         <label class="form-check-label" for="gangguan_tidur">Gangguan Tidur</label>
                                                     </td>
                                                 </tr>
@@ -315,7 +352,7 @@
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_kardiovaskular" value="Nyeri" id="Nyeri">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_kardiovaskular[]" value="Nyeri" id="Nyeri">
                                                         <label class="form-check-label" for="Nyeri">Nyeri</label>
                                                     </td>
                                                 </tr>
@@ -333,7 +370,7 @@
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_kardiovaskular" value="Penurunan Curah Jantung" id="Penurunan_curah_jantung">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_kardiovaskular[]" value="Penurunan Curah Jantung" id="Penurunan_curah_jantung">
                                                         <label class="form-check-label" for="Penurunan_curah_jantung">Penurunan Curah Jantung</label>
                                                     </td>
                                                 </tr>
@@ -351,7 +388,7 @@
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_kardiovaskular" value="Gangguan Perfusi Jaringan" id="Gangguan_Perfusi_Jaringan">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_kardiovaskular[]" value="Gangguan Perfusi Jaringan" id="Gangguan_Perfusi_Jaringan">
                                                         <label class="form-check-label" for="Gangguan_Perfusi_Jaringan">Gangguan Perfusi Jaringan</label>
                                                     </td>
                                                 </tr>
@@ -361,7 +398,7 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_kardiovaskular" value="Intoleransi Aktivitas" id="Intoleransi_Aktivitas">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_kardiovaskular[]" value="Intoleransi Aktivitas" id="Intoleransi_Aktivitas">
                                                         <label class="form-check-label" for="Intoleransi_Aktivitas">Intoleransi Aktivitas</label>
                                                     </td>
                                                 </tr>
@@ -385,7 +422,7 @@
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_persyarafan" value="Gangguan Perfusi Jaringan Cerebral" id="Gangguan_Perfusi_Jaringan_Cerebral">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_persyarafan[]" value="Gangguan Perfusi Jaringan Cerebral" id="Gangguan_Perfusi_Jaringan_Cerebral">
                                                         <label class="form-check-label" for="Gangguan_Perfusi_Jaringan_Cerebral">Gangguan Perfusi Jaringan Cerebral</label>
                                                     </td>
                                                 </tr>
@@ -394,35 +431,35 @@
                                                         <label>b. Kesadaran</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="kesadaran_persyarafan" value="composmentis" id="composmentis">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="kesadaran_persyarafan[]" value="composmentis" id="composmentis">
                                                         <label class="form-check-label" for="composmentis">composmentis</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="kesadaran_persyarafan" value="somnolent" id="somnolent">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="kesadaran_persyarafan[]" value="somnolent" id="somnolent">
                                                         <label class="form-check-label" for="somnolent">somnolent</label>
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_persyarafan" value="Resiko TIK meningkat" id="Resiko_TIK_meningkat">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_persyarafan[]" value="Resiko TIK meningkat" id="Resiko_TIK_meningkat">
                                                         <label class="form-check-label" for="Resiko_TIK_meningkat">Resiko TIK meningkat</label>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td></td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="kesadaran_persyarafan" value="apatis" id="apatis">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="kesadaran_persyarafan[]" value="apatis" id="apatis">
                                                         <label class="form-check-label" for="apatis">apatis</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="kesadaran_persyarafan" value="sopor" id="sopor">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="kesadaran_persyarafan[]" value="sopor" id="sopor">
                                                         <label class="form-check-label" for="sopor">sopor</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="kesadaran_persyarafan" value="coma" id="coma">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="kesadaran_persyarafan[]" value="coma" id="coma">
                                                         <label class="form-check-label" for="coma">coma</label>
                                                     </td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_persyarafan" value="Resiko Cedera" id="Resiko_Cedera">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_persyarafan[]" value="Resiko Cedera" id="Resiko_Cedera">
                                                         <label class="form-check-label" for="Resiko_Cedera">Resiko Cedera</label>
                                                     </td>
                                                 </tr>
@@ -446,15 +483,15 @@
                                                         <label>d. Sklera</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="sklera" value="ikterik" id="ikterik">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="sklera[]" value="ikterik" id="ikterik">
                                                         <label class="form-check-label" for="ikterik">ikterik</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="sklera" value="Non-ikterik" id="Non-ikterik">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="sklera[]" value="Non-ikterik" id="Non-ikterik">
                                                         <label class="form-check-label" for="Non-ikterik">Non-ikterik</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="sklera" value="perdarahan" id="perdarahan">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="sklera[]" value="perdarahan" id="perdarahan">
                                                         <label class="form-check-label" for="perdarahan">perdarahan</label>
                                                     </td>
                                                     <td class="border-start"></td>
@@ -473,7 +510,7 @@
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_persyarafan" value="Gang. Komks. Verbal" id="Gang_Komks_Verbal">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_persyarafan[]" value="Gang. Komks. Verbal" id="Gang_Komks_Verbal">
                                                         <label class="form-check-label" for="Gang_Komks_Verbal">Gang. Komks. Verbal</label>
                                                     </td>
                                                 </tr>
@@ -491,7 +528,7 @@
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_persyarafan" value="Keterbt. mobilitas fisik" id="Keterbt_mobilitas">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_persyarafan[]" value="Keterbt. mobilitas fisik" id="Keterbt_mobilitas">
                                                         <label class="form-check-label" for="Keterbt_mobilitas">Keterbt. mobilitas fisik</label>
                                                     </td>
                                                 </tr>
@@ -509,7 +546,7 @@
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_persyarafan" value="Gangg. Persepsi Sensorik" id="Gangg_Persepsi">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_persyarafan[]" value="Gangg. Persepsi Sensorik" id="Gangg_Persepsi">
                                                         <label class="form-check-label" for="Gangg_Persepsi">Gangg. Persepsi Sensorik</label>
                                                     </td>
                                                 </tr>
@@ -524,83 +561,83 @@
                                                         <label>a. Keluhan</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi" value="Kencing menetes" id="Kencing_menetes">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi[]" value="Kencing menetes" id="Kencing_menetes">
                                                         <label class="form-check-label" for="Kencing_menetes">Kencing menetes</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi" value="Anuri" id="Anuri">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi[]" value="Anuri" id="Anuri">
                                                         <label class="form-check-label" for="Anuri">Anuri</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi" value="Disuri" id="Disuri">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi[]" value="Disuri" id="Disuri">
                                                         <label class="form-check-label" for="Disuri">Disuri</label>
                                                     </td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_ekskresi" value="Perub. pola eliminasi" id="Perub_pola">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_ekskresi[]" value="Perub. pola eliminasi" id="Perub_pola">
                                                         <label class="form-check-label" for="Perub_pola">Perub. pola eliminasi</label>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td></td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi" value="Oliguria" id="Oliguria">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi[]" value="Oliguria" id="Oliguria">
                                                         <label class="form-check-label" for="Oliguria">Oliguria</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi" value="Poliuria" id="Poliuria">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi[]" value="Poliuria" id="Poliuria">
                                                         <label class="form-check-label" for="Poliuria">Poliuria</label>
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_ekskresi" value="Incontinensia uri/alvi" id="Incontinensia">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_ekskresi[]" value="Incontinensia uri/alvi" id="Incontinensia">
                                                         <label class="form-check-label" for="Incontinensia">Incontinensia uri/alvi</label>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td></td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi" value="Retensi uri" id="Retensi">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi[]" value="Retensi uri" id="Retensi">
                                                         <label class="form-check-label" for="Retensi">Retensi uri</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi" value="Gross Hematuria" id="Gross_Hematuria">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi[]" value="Gross Hematuria" id="Gross_Hematuria">
                                                         <label class="form-check-label" for="Gross_Hematuria">Gross Hematuria</label>
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_ekskresi" value="Pola BAB/BAK" id="pola_bab">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_ekskresi[]" value="Pola BAB/BAK" id="pola_bab">
                                                         <label class="form-check-label" for="pola_bab">Pola BAB/BAK</label>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td></td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi" value="Nokturia" id="Nokturia">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi[]" value="Nokturia" id="Nokturia">
                                                         <label class="form-check-label" for="Nokturia">Nokturia uri</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi" value="Incontinensia uri" id="Incontinensia_uri">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi[]" value="Incontinensia uri" id="Incontinensia_uri">
                                                         <label class="form-check-label" for="Incontinensia_uri">Incontinensia uri</label>
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_ekskresi" value="Resiko Retensio uri" id="Resiko_Retensio">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_ekskresi[]" value="Resiko Retensio uri" id="Resiko_Retensio">
                                                         <label class="form-check-label" for="Resiko_Retensio">Resiko Retensio uri</label>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td></td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi" value="Kateter" id="Kateter">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi[]" value="Kateter" id="Kateter">
                                                         <label class="form-check-label" for="Kateter">Kateter uri</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi" value="Cystostomi" id="Cystostotomi">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="keluhan_sistem_ekskresi[]" value="Cystostomi" id="Cystostotomi">
                                                         <label class="form-check-label" for="Cystostotomi">Cystostotomi</label>
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_ekskresi" value="Resiko infeksi" id="Resiko_infeksi">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_ekskresi[]" value="Resiko infeksi" id="Resiko_infeksi">
                                                         <label class="form-check-label" for="Resiko_infeksi">Resiko infeksi</label>
                                                     </td>
                                                 </tr>
@@ -622,8 +659,8 @@
                                                         </div>
                                                     </td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_ekskresi" value="Nyeri" id="Nyeri">
-                                                        <label class="form-check-label" for="Nyeri">Nyeri</label>
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_ekskresi[]" value="Nyeri" id="Nyeri_ekskresi">
+                                                        <label class="form-check-label" for="Nyeri_ekskresi">Nyeri</label>
                                                     </td>
                                                 </tr>
                                                 <tr class="border-bottom">
@@ -652,17 +689,17 @@
                                                         <label>a. Mulut</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="mulut" value="Nyeri telan" id="Nyeri_telan">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="mulut[]" value="Nyeri telan" id="Nyeri_telan">
                                                         <label class="form-check-label" for="Nyeri_telan">Nyeri telan</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="mulut" value="Nyeri rongga mulut" id="Nyeri_rongga_mulut">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="mulut[]" value="Nyeri rongga mulut" id="Nyeri_rongga_mulut">
                                                         <label class="form-check-label" for="Nyeri_rongga_mulut">Nyeri rongga mulut</label>
                                                     </td>
                                                     <td>
                                                     </td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_pencernaan" value="Gangguan menelan" id="Gangguan_menelan">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_pencernaan[]" value="Gangguan menelan" id="Gangguan_menelan">
                                                         <label class="form-check-label" for="Gangguan_menelan">Gangguan menelan</label>
                                                     </td>
                                                 </tr>
@@ -671,37 +708,37 @@
                                                         <label>b. Abdomen</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="abdomen" value="Nyeri tekan" id="Nyeri_tekan">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="abdomen[]" value="Nyeri tekan" id="Nyeri_tekan">
                                                         <label class="form-check-label" for="Nyeri_tekan">Nyeri tekan</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="abdomen" value="Distensi" id="Distensi">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="abdomen[]" value="Distensi" id="Distensi">
                                                         <label class="form-check-label" for="Distensi">Distensi</label>
                                                     </td>
                                                     <td>
                                                     </td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_pencernaan" value="Diare" id="Diare">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_pencernaan[]" value="Diare" id="Diare">
                                                         <label class="form-check-label" for="Diare">Diare</label>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td></td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="abdomen" value="Ascites" id="Ascites">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="abdomen[]" value="Ascites" id="Ascites">
                                                         <label class="form-check-label" for="Ascites">Ascites</label>
                                                     </td>
                                                     <td>
                                                         <div class="input-group">
-                                                            <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="abdomen" value="Pembengkakan" id="Pembengkakan">
+                                                            <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="abdomen[]" value="Pembengkakan" id="Pembengkakan">
                                                             <label class="form-check-label" for="Pembengkakan">Pembengkakan</label>
-                                                            <input type="text" class="form-control input-border-bottom" name="abdomen">
+                                                            <input type="text" class="form-control input-border-bottom" name="abdomen[]">
                                                         </div>
                                                     </td>
                                                     <td>
                                                     </td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_pencernaan" value="Kekurangan/kelebihan cairan" id="Ke_cairan">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_pencernaan[]" value="Kekurangan/kelebihan cairan" id="Ke_cairan">
                                                         <label class="form-check-label" for="Ke_cairan">Kekurangan/kelebihan cairan</label>
                                                     </td>
                                                 </tr>
@@ -717,7 +754,7 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_pencernaan" value="Kekurangan/kelebihan nutrisi" id="Ke_nutrisi">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_pencernaan[]" value="Kekurangan/kelebihan nutrisi" id="Ke_nutrisi">
                                                         <label class="form-check-label" for="Ke_nutrisi">Kekurangan/kelebihan nutrisi</label>
                                                     </td>
                                                 </tr>
@@ -726,21 +763,21 @@
                                                         <label>Konsistensi</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="konsistensi_bab" value="Keras" id="Keras">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="konsistensi_bab[]" value="Keras" id="Keras">
                                                         <label class="form-check-label" for="Keras">Keras</label>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="konsistensi_bab" value="Lunak" id="Lunak">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="konsistensi_bab[]" value="Lunak" id="Lunak">
                                                         <label class="form-check-label" for="Lunak">Lunak</label>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="konsistensi_bab" value="Cair" id="Cair">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="konsistensi_bab[]" value="Cair" id="Cair">
                                                         <label class="form-check-label" for="Cair">Cair</label>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="konsistensi_bab" value="Darah" id="Darah">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="konsistensi_bab[]" value="Darah" id="Darah">
                                                         <label class="form-check-label" for="Darah">Darah</label>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="konsistensi_bab" value="Hitam" id="Hitam">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="konsistensi_bab[]" value="Hitam" id="Hitam">
                                                         <label class="form-check-label" for="Hitam">Hitam</label>
                                                     </td>
                                                     <td></td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_pencernaan" value="Resiko keganasan" id="Resiko_keganasan">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_pencernaan[]" value="Resiko keganasan" id="Resiko_keganasan">
                                                         <label class="form-check-label" for="Resiko_keganasan">Resiko keganasan</label>
                                                     </td>
                                                 </tr>
@@ -749,11 +786,11 @@
                                                         <label>d. Diet</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="diet" value="Padat" id="Padat">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="diet[]" value="Padat" id="Padat">
                                                         <label class="form-check-label" for="Padat">Padat</label>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="diet" value="Lunak" id="Lunak_d">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="diet[]" value="Lunak" id="Lunak_d">
                                                         <label class="form-check-label" for="Lunak_d">Lunak</label>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="diet" value="Cair" id="Cair_d">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="diet[]" value="Cair" id="Cair_d">
                                                         <label class="form-check-label" for="Cair_d">Cair</label>
                                                     </td>
                                                     <td></td>
@@ -800,7 +837,7 @@
                                                     <td>
                                                     </td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_muskuloskeletal" value="Gangguan mobilitas" id="Gangguan_mobilitas">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_muskuloskeletal[]" value="Gangguan mobilitas" id="Gangguan_mobilitas">
                                                         <label class="form-check-label" for="Gangguan_mobilitas">Gangguan mobilitas</label>
                                                     </td>
                                                 </tr>
@@ -809,17 +846,17 @@
                                                         <label>b. akral</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="akral" value="Hangat" id="Hangat">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="akral[]" value="Hangat" id="Hangat">
                                                         <label class="form-check-label" for="Hangat">Hangat</label>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="akral" value="Panas" id="Panas">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="akral[]" value="Panas" id="Panas">
                                                         <label class="form-check-label" for="Panas">Panas</label>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="akral" value="Dingin" id="Dingin">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="akral[]" value="Dingin" id="Dingin">
                                                         <label class="form-check-label" for="Dingin">Dingin</label>
                                                     </td>
                                                     <td></td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_muskuloskeletal" value="Gangguan integritas kulit" id="Gangguan_integritas_kulit">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_muskuloskeletal[]" value="Gangguan integritas kulit" id="Gangguan_integritas_kulit">
                                                         <label class="form-check-label" for="Gangguan_integritas_kulit">Gangguan integritas kulit</label>
                                                     </td>
                                                 </tr>
@@ -833,7 +870,7 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_muskuloskeletal" value="Gangguan citra tubuh" id="Gangguan_citra_tubuh">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_muskuloskeletal[]" value="Gangguan citra tubuh" id="Gangguan_citra_tubuh">
                                                         <label class="form-check-label" for="Gangguan_citra_tubuh">Gangguan citra tubuh</label>
                                                     </td>
                                                 </tr>
@@ -842,48 +879,48 @@
                                                         <label for="eks">d. Eksternal Fiksasi di</label>
                                                     </td>
                                                     <td>
-                                                        <input type="text" id="eks" class="form-control input-border-bottom" name="eks_fiksasi">
+                                                        <input type="text" id="eks" class="form-control input-border-bottom" name="eks_fiksasi[]">
                                                     </td>
                                                     <td></td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_muskuloskeletal" value="Kurangnya perawatan diri" id="perawatan_diri">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_muskuloskeletal[]" value="Kurangnya perawatan diri" id="perawatan_diri">
                                                         <label class="form-check-label" for="perawatan_diri">Kurangnya perawatan diri</label>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td></td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="eks_fiksasi" value="Peradangan" id="Peradangan">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="eks_fiksasi[]" value="Peradangan" id="Peradangan">
                                                         <label class="form-check-label" for="Peradangan">Peradangan</label>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="eks_fiksasi" value="luka" id="luka">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="eks_fiksasi[]" value="luka" id="luka">
                                                         <label class="form-check-label" for="luka">luka</label>
                                                     </td>
                                                     <td>
-                                                        <input type="text" id="luka" class="form-control input-border-bottom" name="eks_fiksasi">
+                                                        <input type="text" id="luka" class="form-control input-border-bottom" name="eks_fiksasi[]">
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_muskuloskeletal" value="Nyeri" id="Nyeri_m">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_muskuloskeletal[]" value="Nyeri" id="Nyeri_m">
                                                         <label class="form-check-label" for="Nyeri_m">Nyeri</label>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td></td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="eks_fiksasi" value="deformitas" id="deformitas">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="eks_fiksasi[]" value="deformitas" id="deformitas">
                                                         <label class="form-check-label" for="deformitas">deformitas</label>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="eks_fiksasi" value="nyeri" id="nyeri_e">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="eks_fiksasi[]" value="nyeri" id="nyeri_e">
                                                         <label class="form-check-label" for="nyeri_e">nyeri</label>
                                                     </td>
                                                     <td>
-                                                        <input type="text" id="nyeri_e" class="form-control input-border-bottom" name="eks_fiksasi">
+                                                        <input type="text" id="nyeri_e" class="form-control input-border-bottom" name="eks_fiksasi[]">
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
                                                         <div class="input-group">
                                                             <input type="checkbox" class="form-check-input form-check-primary form-check-glow">
-                                                            <input type="text" class="form-control input-border-bottom" name="masalah_muskuloskeletal">
+                                                            <input type="text" class="form-control input-border-bottom" name="masalah_muskuloskeletal[]">
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -946,7 +983,7 @@
                                                         </div>
                                                     </td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_reproduksi" value="Perubahan pola seksual" id="Perubahan_pola_seksual">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_reproduksi[]" value="Perubahan pola seksual" id="Perubahan_pola_seksual">
                                                         <label class="form-check-label" for="Perubahan_pola_seksual">Perubahan pola seksual</label>
                                                     </td>
                                                 </tr>
@@ -968,8 +1005,8 @@
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_reproduksi" value="Pendarahan" id="Pendarahan">
-                                                        <label class="form-check-label" for="Pendarahan">Pendarahan</label>
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_reproduksi[]" value="Pendarahan" id="msl_Pendarahan">
+                                                        <label class="form-check-label" for="msl_Pendarahan">Pendarahan</label>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -990,7 +1027,7 @@
                                                         <label for="Tidak_Teratur">Tidak Teratur</label>
                                                     </td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_reproduksi" value="Gangguan Konsepsi" id="Gangguan_Konsepsi">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_reproduksi[]" value="Gangguan Konsepsi" id="Gangguan_Konsepsi">
                                                         <label class="form-check-label" for="Gangguan_Konsepsi">Gangguan Konsepsi</label>
                                                     </td>
                                                 </tr>
@@ -1000,7 +1037,7 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_reproduksi" value="Gangguan rasa nyaman" id="Gangguan_rasa_nyaman">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_reproduksi[]" value="Gangguan rasa nyaman" id="Gangguan_rasa_nyaman">
                                                         <label class="form-check-label" for="Gangguan_rasa_nyaman">Gangguan rasa nyaman</label>
                                                     </td>
                                                 </tr>
@@ -1015,46 +1052,46 @@
                                                         <label>a. Psikologis</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="psikologis" value="takut" id="takut">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="psikologis[]" value="takut" id="takut">
                                                         <label class="form-check-label" for="takut">takut</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="psikologis" value="rendah diri" id="rendah_diri">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="psikologis[]" value="rendah diri" id="rendah_diri">
                                                         <label class="form-check-label" for="rendah_diri">rendah diri</label>
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_psikologis" value="Cemas" id="Cemas">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_psikologis[]" value="Cemas" id="Cemas">
                                                         <label class="form-check-label" for="Cemas">Cemas</label>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td></td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="psikologis" value="sedih" id="sedih">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="psikologis[]" value="sedih" id="sedih">
                                                         <label class="form-check-label" for="sedih">sedih</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="psikologis" value="marah" id="marah">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="psikologis[]" value="marah" id="marah">
                                                         <label class="form-check-label" for="marah">marah</label>
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_psikologis" value="Gangguan interaksi sosial" id="Gangguan_interaksi_sosial">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_psikologis[]" value="Gangguan interaksi sosial" id="Gangguan_interaksi_sosial">
                                                         <label class="form-check-label" for="Gangguan_interaksi_sosial">Gangguan interaksi sosial</label>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td></td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="psikologis" value="sedih" id="sedih">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="psikologis[]" value="sedih" id="sedih">
                                                         <label class="form-check-label" for="sedih">sedih</label>
                                                     </td>
                                                     <td></td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_psikologis" value="Menarik diri" id="Menarik_diri">
-                                                        <label class="form-check-label" for="Menarik_diri">Menarik diri</label>
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_psikologis[]" value="Menarik diri" id="msl_Menarik_diri">
+                                                        <label class="form-check-label" for="msl_Menarik_diri">Menarik diri</label>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -1062,16 +1099,16 @@
                                                         <label>b. Sosiologis</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="sosiologis" value="Menarik diri" id="Menarik_diri">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="sosiologis[]" value="Menarik diri" id="Menarik_diri">
                                                         <label class="form-check-label" for="Menarik_diri">Menarik diri</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="sosiologis" value="Komunikasi baik" id="Komunikasi_baik">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="sosiologis[]" value="Komunikasi baik" id="Komunikasi_baik">
                                                         <label class="form-check-label" for="Komunikasi_baik">Komunikasi baik</label>
                                                     </td>
                                                     <td></td>
                                                     <td class="border-start">
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_psikologis" value="Keterbatasan dalam inspirasi" id="Keterbatasan_dalam_inspirasi">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="masalah_psikologis[]" value="Keterbatasan dalam inspirasi" id="Keterbatasan_dalam_inspirasi">
                                                         <label class="form-check-label" for="Keterbatasan_dalam_inspirasi">Keterbatasan dalam inspirasi</label>
                                                     </td>
                                                 </tr>
@@ -1080,11 +1117,11 @@
                                                         <label>c. Spiritual</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="spiritual" value="perlu dibantu" id="perlu_dibantu">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="spiritual[]" value="perlu dibantu" id="perlu_dibantu">
                                                         <label class="form-check-label" for="perlu_dibantu">perlu dibantu</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="spiritual" value="Lain-lain" id="Lain-lain">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="spiritual[]" value="Lain-lain" id="Lain-lain">
                                                         <label class="form-check-label" for="Lain-lain">Lain-lain</label>
                                                     </td>
                                                     <td></td>
@@ -1100,11 +1137,11 @@
                                                         <label>Jika ada :</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="hambatan_diri" value="Bahasa" id="Bahasa">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="hambatan_diri[]" value="Bahasa" id="Bahasa">
                                                         <label class="form-check-label" for="Bahasa">Bahasa</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="hambatan_diri" value="Tuna rungu" id="Tuna_rungu">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="hambatan_diri[]" value="Tuna rungu" id="Tuna_rungu">
                                                         <label class="form-check-label" for="Tuna_rungu">Tuna rungu</label>
                                                     </td>
                                                     <td></td>
@@ -1113,11 +1150,11 @@
                                                 <tr>
                                                     <td></td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="hambatan_diri" value="Budaya" id="Budaya">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="hambatan_diri[]" value="Budaya" id="Budaya">
                                                         <label class="form-check-label" for="Budaya">Budaya</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="hambatan_diri" value="Tuna wicara" id="Tuna_wicara">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="hambatan_diri[]" value="Tuna wicara" id="Tuna_wicara">
                                                         <label class="form-check-label" for="Tuna_wicara">Tuna wicara</label>
                                                     </td>
                                                     <td></td>
@@ -1126,11 +1163,11 @@
                                                 <tr class="border-bottom">
                                                     <td></td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="hambatan_diri" value="Cacat fisik" id="Cacat_fisik">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="hambatan_diri[]" value="Cacat fisik" id="Cacat_fisik">
                                                         <label class="form-check-label" for="Cacat_fisik">Cacat fisik</label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="hambatan_diri" value="Tuna netra" id="Tuna_netra">
+                                                        <input type="checkbox" class="form-check-input form-check-primary form-check-glow" name="hambatan_diri[]" value="Tuna netra" id="Tuna_netra">
                                                         <label class="form-check-label" for="Tuna_netra">Tuna netra</label>
                                                     </td>
                                                     <td></td>
@@ -1150,8 +1187,8 @@
                                         </div>
                                         <div class="row mt-4">
                                             <div class="col-12 d-flex justify-content-end mt-2">
-                                                <button type="submit" class="btn btn-primary btn-sm me-1 mb-1" title="tambah">Simpan</button>
-                                                <button type="reset" class="btn btn-light-secondary btn-sm me-1 mb-1" title="reset">Reset</button>    
+                                                <button type="submit" class="btn btn-primary btn-sm me-1 mb-1" title="tambah data"><i class="bi bi-save2"></i> Simpan</button>
+                                                <button type="reset" class="btn btn-light-secondary btn-sm me-1 mb-1" title="reset"><i class="bi bi-x-square"></i> Reset</button>    
                                             </div>
                                         </div>
                                     </form>

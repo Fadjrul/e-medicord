@@ -15,11 +15,11 @@
                 </nav>
             </div>
         </div>
-        <?php 
-            if($this->session->flashdata('alert')){
-                echo $this->session->flashdata('alert');
-            }
-        ?>
+        <?php
+        if ($this->session->flashdata('alert')) {
+            echo $this->session->flashdata('alert');
+            unset($_SESSION['alert']);
+        } ?>
     </div>
 
     <!-- Page content -->
@@ -56,10 +56,7 @@
                      <div class="modal fade text-start modal-borderless" id="FormTambah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
                             <div class="modal-content">
-                            <?php
-                                foreach($pasien as $key){}
-                            ?>
-                            <?php echo form_open('riwayat_kunjungan_pasien/create_page/' . $key->pasien_id); ?>
+                            <?php echo form_open('riwayat_kunjungan_pasien/create_page'); ?>
                                 <form>
                                     <div class="modal-body">
                                         <div class="row form-group">
@@ -70,20 +67,31 @@
                                         <div class="row form-group">
                                             <div class="col-12">
                                             <?php echo csrf(); ?>
-                                                <input type="hidden" class="form-control" name="pasien_id" value="<?php echo $key->pasien_id; ?>">
-                                                    <select class="choices form-select" name="pasien_id" required style="width:100%">
-                                                        <option value="">- Pilih Pasien -</option>
-                                                        <?php
-                                                            foreach($pasien as $key){
-                                                                echo '<option value="'.$key->pasien_id.'">'.$key->no_rekam_medis." | ".$key->nama_pasien.'</option>';
-                                                            }
-                                                        ?>
+                                                <select class="choices form-select" name="pasien_id" required style="width:100%">
+                                                    <option value="">- Pilih Pasien -</option>
+                                                    <?php
+                                                        foreach($pasien as $key){
+                                                            echo '<option value="'.$key->pasien_id.'">'.$key->no_rekam_medis." | ". $key->nama_pasien.'</option>';
+                                                        }
+                                                    ?>
 
-                                                    </select>
-                                                    <input type="hidden" class="form-control" name="pasien_id" value="<?php echo $key->pasien_id; ?>">
+                                                </select>
                                             </div>
                                         </div>
-                                        
+                                        <div class="row form-group">
+                                            <div class="col-12">
+                                                <label for=""><strong> KUNCI <?php if ($key->jns_key_id == 1) {
+                                                                    echo "(AES-128)";
+                                                                    } elseif ($key->jns_key_id == 2) { echo "(SPECK-128)";} else echo ""; ?></strong>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-12">
+                                                <input type="password" class="form-control" id="key" placeholder="kunci..." name="key" required="required">
+                                                <input type="hidden" class="form-control" id="jns_key_id" placeholder="kunci..." name="jns_key_id" value="<?php echo $key->jns_key_id; ?>">
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-primary">Buat</button>
@@ -99,14 +107,14 @@
                     <div class="row p-4" id="table-hover-row">
                         <div class="col-12">
                             <div class="table-responsive">
-                                <table class="table table-hover" id="DataTable">
+                                <table class="table table-hover" id="table1">
                                     <thead>
                                         <tr>
                                             <th>No.</th>
                                             <th>Nomor Rekam Medis</th>
                                             <th>Nama Pasien</th>
-                                            <th>Jenis Kelamin</th>
                                             <th>Tanggal Kunjungan</th>
+                                            <th>Perekam medis</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -119,29 +127,21 @@
 
                                         ?>
                                                 <tr>
-                                                    <td><?php echo $no + $numbers; ?></td>
-                                                    <td><?php echo $key->no_rekam_medis ?></td>
-                                                    <td><?php echo $key->nama_pasien ?></td>
-                                                    <td><?php echo $key->jenis_kelamin ?></td>
-                                                    <td><?php echo $key->createtime ?></td>
+                                                    <td><?php echo $no; ?></td>
+                                                    <td><?php echo $key->no_rekam_medis; ?></td>
+                                                    <td><?php echo $key->nama_pasien; ?></td>
+                                                    <td><?php echo indonesiaDate($key->tgl_daftar); ?></td>
+                                                    <td><?php echo $key->user_fullname; ?></td>
                                                     
                                                     <td>
                                                         <div class="btn-group dropstart mb-1">
                                                             <button type="button" class="btn btn-info btn-sm dropdown-toggle" title="Pilih Aksi" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
                                                             <ul class="dropdown-menu">
                                                                 <li>
-                                                                    <?php echo form_open("riwayat_kunjungan_pasien/detail_page/" . $key->riwayat_kunjungan_pasien_id); ?>
-                                                                    <?php echo csrf(); ?>
-                                                                    <button type="submit" class="dropdown-item" title="Lihat data"><i class="bi bi-eye"></i> Detail</button>
-                                                                    <input type="hidden" class="form-control" name="riwayat_kunjungan_pasien_id" required="required">
-                                                                    <?php echo form_close(); ?>
+                                                                    <button type="submit" class="dropdown-item" data-bs-toggle="modal" title="Lihat data" data-bs-target="#FormDetail<?php echo $key->riwayat_kunjungan_pasien_id; ?>"><i class="bi bi-eye"></i> Detail</button>
                                                                 </li>
                                                                 <li>
-                                                                    <?php echo form_open("riwayat_kunjungan_pasien/update_page/" . $key->riwayat_kunjungan_pasien_id); ?>
-                                                                    <?php echo csrf(); ?>
-                                                                    <button type="submit" class="dropdown-item" title="Ubah data"><i class="bi bi-pencil-square"></i> Ubah</button>
-                                                                    <input type="hidden" class="form-control" name="riwayat_kunjungan_pasien_id" required="required">
-                                                                    <?php echo form_close(); ?>
+                                                                    <button type="submit" class="dropdown-item" data-bs-toggle="modal" title="Ubah data" data-bs-target="#FormUbah<?php echo $key->riwayat_kunjungan_pasien_id; ?>"><i class="bi bi-pencil-square"></i> Ubah</button>
                                                                 </li>
                                                                 <li>
                                                                     <?php echo form_open("riwayat_kunjungan_pasien/delete") ?>
@@ -154,6 +154,72 @@
                                                         </div>
                                                     </td>
                                                 </tr>
+
+                                                <!-- Modal Detail Rekam Medis -->
+                                                <div class="modal fade text-start modal-borderless" id="FormDetail<?php echo $key->riwayat_kunjungan_pasien_id; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                        <?php echo form_open('riwayat_kunjungan_pasien/detail_page/'. $key->riwayat_kunjungan_pasien_id); ?>
+                                                            <form>
+                                                                <div class="modal-body">
+                                                                    <div class="row form-group">
+                                                                        <div class="col-12">
+                                                                        <?php echo csrf(); ?>
+                                                                            <label for=""><strong> KUNCI <?php if ($key->jns_key_id == 1) {
+                                                                                                echo "(AES-128)";
+                                                                                                } elseif ($key->jns_key_id == 2) { echo "(SPECK-128)";} else echo ""; ?></strong>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row form-group">
+                                                                        <div class="col-12">
+                                                                            <input type="password" class="form-control" id="key" placeholder="kunci..." name="key" required="required">
+                                                                            <input type="hidden" class="form-control" id="jns_key_id" placeholder="kunci..." name="jns_key_id" value="<?php echo $key->jns_key_id; ?>">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="submit" class="btn btn-primary">Lihat</button>
+                                                                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">Batal</button>
+                                                                </div>
+                                                            </form>
+                                                        <?php echo form_close(); ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Modal Ubah Rekam Medis -->
+                                                <div class="modal fade text-start modal-borderless" id="FormUbah<?php echo $key->riwayat_kunjungan_pasien_id; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                        <?php echo form_open('riwayat_kunjungan_pasien/update_page/'. $key->riwayat_kunjungan_pasien_id); ?>
+                                                            <form>
+                                                                <div class="modal-body">
+                                                                    <div class="row form-group">
+                                                                        <div class="col-12">
+                                                                        <?php echo csrf(); ?>
+                                                                            <label for=""><strong> KUNCI <?php if ($key->jns_key_id == 1) {
+                                                                                                echo "(AES-128)";
+                                                                                                } elseif ($key->jns_key_id == 2) { echo "(SPECK-128)";} else echo ""; ?></strong>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row form-group">
+                                                                        <div class="col-12">
+                                                                            <input type="password" class="form-control" id="key" placeholder="kunci..." name="key" required="required">
+                                                                            <input type="hidden" class="form-control" id="jns_key_id" placeholder="kunci..." name="jns_key_id" value="<?php echo $key->jns_key_id; ?>">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="submit" class="btn btn-primary">Ubah</button>
+                                                                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">Batal</button>
+                                                                </div>
+                                                            </form>
+                                                        <?php echo form_close(); ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
                                         <?php
                                                 $no++;

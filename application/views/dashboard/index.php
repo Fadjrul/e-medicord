@@ -14,6 +14,7 @@
                 </nav>
             </div>
         </div>
+        <!-- ALert -->
         <?php 
             if ($this->session->flashdata('alert')) {
                 echo $this->session->flashdata('alert');
@@ -26,71 +27,79 @@
     <div class="page-content">
         <section class="row">
 
-                <div class="col-12 col-md-4 col-lg-4">
+                <div class="col-12 col-md-12 col-lg-12">
                     <div class="row">
-                        <div class="col-12 col-lg-6 col-md-6">
+                        <div class="col-12 col-lg-3 col-md-3">
                             <div class="card">
                                 <div class="card-body px-4 py-4-5">
                                     <div class="row">
-                                        <div class="col-md-4 col-lg-12 d-flex justify-content-start ">
+                                        <div class="col-md-4 col-lg-4 d-flex justify-content-start ">
                                             <div class="stats-icon purple mb-2">
                                                 <i class="fas fa-user-injured"></i>
                                             </div>
                                         </div>
-                                        <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                        <div class="col-md-8 col-lg-8 d-flex justify-content-end">
+                                            <h3 class="font-extrabold mb-0"><?php echo $widget[0]->total_pasien;?></h3>
+                                        </div>
+                                        <div class="col-md-12 col-lg-12">
                                             <h6 class="text-muted font-semibold">Total Pasien</h6>
-                                            <h6 class="font-extrabold mb-0"><?php echo $widget[0]->total_pasien;?></h6>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 col-md-6">
+                        <div class="col-12 col-lg-3 col-md-3">
                             <div class="card">
                                 <div class="card-body px-4 py-4-5">
                                     <div class="row">
-                                        <div class="col-md-4 col-lg-12 d-flex justify-content-start ">
+                                        <div class="col-md-4 col-lg-4 d-flex justify-content-start ">
                                             <div class="stats-icon green mb-2">
                                                 <i class="fas fa-notes-medical"></i>
                                             </div>
                                         </div>
-                                        <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                        <div class="col-md-8 col-lg-8 d-flex justify-content-end">
+                                            <h3 class="font-extrabold mb-0"><?php echo $widget2[0]->total_rm_pengkajian_awal;?></h3>
+                                        </div>
+                                        <div class="col-md-12 col-lg-12">
                                             <h6 class="text-muted font-semibold">RM Pengkajian Awal</h6>
-                                            <h6 class="font-extrabold mb-0">1.000</h6>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 col-md-6">
+                        <div class="col-12 col-lg-3 col-md-3">
                             <div class="card">
                                 <div class="card-body px-4 py-4-5">
-                                    <div class="row">
-                                        <div class="col-md-4 col-lg-12 d-flex justify-content-start ">
+                                    <div class="row  align-items-center">
+                                        <div class="col-md-4 col-lg-4 d-flex justify-content-start ">
                                             <div class="stats-icon red mb-2">
                                                 <i class="fas fa-notes-medical"></i>
                                             </div>
                                         </div>
-                                        <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                        <div class="col-md-8 col-lg-8 d-flex justify-content-end">
+                                            <h3 class="font-extrabold mb-0"><?php echo $widget4[0]->total_rm_riwayat_kunjungan_pasien;?></h3>
+                                        </div>
+                                        <div class="col-md-12 col-lg-12">
                                             <h6 class="text-muted font-semibold">RM Riwayat Kunjungan Pasien</h6>
-                                            <h6 class="font-extrabold mb-0">1.000</h6>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 col-md-6">
+                        <div class="col-12 col-lg-3 col-md-3">
                             <div class="card">
                                 <div class="card-body px-4 py-4-5">
-                                    <div class="row">
-                                        <div class="col-md-4 col-lg-12 d-flex justify-content-start ">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-4 col-lg-4 d-flex justify-content-start ">
                                             <div class="stats-icon blue mb-2">
                                                 <i class="fas fa-notes-medical"></i>
                                             </div>
                                         </div>
-                                        <div class="col-md-8 col-lg-12">
+                                        <div class="col-md-8 col-lg-8 d-flex justify-content-end">
+                                            <h3 class="font-extrabold mb-0"><?php echo $widget3[0]->total_rm_pemeriksaan_odontogram;?></h3>
+                                        </div>
+                                        <div class="col-md-12 col-lg-12">
                                             <h6 class="text-muted font-semibold">RM Pemeriksaan Odontogram</h6>
-                                            <h6 class="font-extrabold mb-0">200</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -99,7 +108,7 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-md-8 col-lg-8">
+                <div class="col-12 col-md-6 col-lg-6">
                     <div class="row">
                         <div class="col-12 col-lg-12 col-md-12">
                             <div class="card">
@@ -117,7 +126,7 @@
                                 <div class="row p-4" id="table-hover-row">
                                     <div class="col-12">
                                         <div class="table-responsive">
-                                            <table class="table table-hover" id="DataTable">
+                                            <table class="table table-hover" id="table1">
                                                 <thead>
                                                     <tr>
                                                         <th>No.</th>

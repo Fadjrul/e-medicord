@@ -6,15 +6,19 @@ class M_dokter extends CI_Model {
         parent::__construct();
     }
     
-    public function read($limit, $start, $key) {
+    public function read($limit, $start, $key, $dokter_id) {
         $this->db->select('*');
         $this->db->from('tbl_dokter');
+
+        if($dokter_id !=""){
+            $this->db->where('dokter_id', $dokter_id);
+        }
         
         if($key!=''){
             $this->db->like("nama_dokter", $key);
-            $this->db->like("spesialis", $key);
-            $this->db->like("jenis_kelamin", $key);
-            $this->db->like("ttdDokter", $key);
+            $this->db->or_like("spesialis", $key);
+            $this->db->or_like("jenis_kelamin", $key);
+            $this->db->or_like("ttd_dokter", $key);
         }
 
         if($limit !="" OR $start !=""){

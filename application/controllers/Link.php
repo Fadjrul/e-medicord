@@ -3,8 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Link extends CI_Controller {
     public function __construct() {
         parent::__construct();
+        // LOAD MODEL & LIBRARY
         $this->load->model('m_link');
         $this->load->library('upload');
+
+        // SESSION
         if (!$this->session->userdata('user_id') OR $this->session->userdata('user_group')!=1) {
 			// ALERT
 			$alertStatus  = 'failed';
@@ -16,26 +19,11 @@ class Link extends CI_Controller {
     
 
     public function index() {
-        $this->session->unset_userdata('sess_search_link');
-
-        // PAGINATION
-        $baseUrl    = base_url() . "link/index/";
-        $totalRows  = count((array) $this->m_link->read('','',''));
-        $perPage    = $this->session->userdata('sess_rowpage');
-        $uriSegment = 3;
-        $paging     = generatePagination($baseUrl, $totalRows, $perPage, $uriSegment);
-        $page       = ($this->uri->segment($uriSegment)) ? $this->uri->segment($uriSegment) : 0;
-        
-        $data['numbers']    = $paging['numbers'];
-        $data['links']      = $paging['links'];
-        $data['total_data'] = $totalRows ;
-        
-
         
         //DATA
         $data['setting'] = getSetting();
         $data['title']   = 'Link Terkait';
-        $data['link']    = $this->m_link->read($perPage, $page,'');
+        $data['link']    = $this->m_link->read('','','');
 		
         
         // TEMPLATE
@@ -44,42 +32,11 @@ class Link extends CI_Controller {
 		TemplateApp($data, $view, $viewCategory);
     }
     
-
-    public function search() {
-        if ($this->input->post('key')) {
-            $data['search'] = $this->input->post('key');
-            $this->session->set_userdata('sess_search_link', $data['search']);
-        } else {
-            $data['search'] = $this->session->userdata('sess_search_link');
-        }
-        
-        // PAGINATION
-        $baseUrl    = base_url() . "link/search/".$data['search']."/";
-        $totalRows  = count((array)$this->m_link->read('','',$data['search']));
-        $perPage    = $this->session->userdata('sess_rowpage');
-        $uriSegment = 3;
-        $paging     = generatePagination($baseUrl, $totalRows, $perPage, $uriSegment);
-        $page       = ($this->uri->segment($uriSegment)) ? $this->uri->segment($uriSegment) : 0;
-        
-        $data['numbers']    = $paging['numbers'];
-        $data['links']      = $paging['links'];
-        $data['total_data'] = $totalRows ;
-        
-        //DATA
-        $data['setting'] = getSetting();
-        $data['title']   = 'Link Terkait';
-        $data['link']    = $this->m_link->read($perPage, $page, $data['search']);
-        
-        // TEMPLATE
-		$view         = "link/index";
-		$viewCategory = "all";
-		TemplateApp($data, $view, $viewCategory);
-    }
-    
-
+    // CREATE LINK
     public function create() {
         csrfValidate();
 
+        // UPLOAD FOTO LINK
         $path = './upload/link/';
 
         $filename_1              = "link-".date('YmdHis');
@@ -106,17 +63,17 @@ class Link extends CI_Controller {
             $this->m_link->create($data);
 
             // LOG
-            $message    = $this->session->userdata('user_name')." menambah data link terkait dengan nama = ".$data['link_image'];
+            $message    = $this->session->userdata('user_name')." menambah data link terkait dengan nama : ".$data['link_name'];
             createLog($message);
 
             // ALERT
             $alertStatus  = "success";
-            $alertMessage = "Berhasil menambah data link terkait dengan nama = ".$data['link_image'];
+            $alertMessage = "Berhasil menambah data link terkait dengan nama : ".$data['link_name'];
             getAlert($alertStatus, $alertMessage);
         }
         
 
-        redirect('link/index');
+        redirect('link');
     }
     
 
@@ -149,12 +106,12 @@ class Link extends CI_Controller {
                 $this->m_link->update($data);
 
                 // LOG
-                $message    = $this->session->userdata('user_name')." mengubah data link terkait dengan ID = ".$data['link_id'];
+                $message    = $this->session->userdata('user_fullname')." mengubah data link terkait dengan nama : ".$data['link_name'];
                 createLog($message);
 
                 // ALERT
                 $alertStatus  = "success";
-                $alertMessage = "Berhasil mengubah data link terkait ".$data['link_id'];
+                $alertMessage = "Berhasil mengubah data link terkait dengan nama : ".$data['link_name'];
                 getAlert($alertStatus, $alertMessage);
             }
         }else{
@@ -165,17 +122,17 @@ class Link extends CI_Controller {
             $this->m_link->update($data);
 
             // LOG
-            $message    = $this->session->userdata('user_name')." mengubah data link terkait dengan ID = ".$data['link_id'];
+            $message    = $this->session->userdata('user_fullname')." mengubah data link terkait dengan nama : ".$data['link_name'];
             createLog($message);
 
             // ALERT
             $alertStatus  = "success";
-            $alertMessage = "Berhasil mengubah data link terkait dengan ID = ".$data['link_id'];
+            $alertMessage = "Berhasil mengubah data link terkait dengan nama : ".$data['link_name'];
             getAlert($alertStatus, $alertMessage);
         }
 
 
-        redirect('link/index');
+        redirect('link');
     }
     
 
@@ -184,16 +141,17 @@ class Link extends CI_Controller {
         // POST
         $this->m_link->delete($this->input->post('link_id'));
         unlink('./upload/link/'.$this->input->post('link_image'));
+
         // LOG
-        $message    = $this->session->userdata('user_name')." menghapus data link terkait dengan ID = ".$this->input->post('link_id')." - ".$this->input->post('link_id');
+        $message    = $this->session->userdata('user_fullname')." menghapus data link terkait dengan ID : ".$this->input->post('link_id');
         createLog($message);
 
         // ALERT
         $alertStatus  = "failed";
-        $alertMessage = "Menghapus data link terkait : ".$this->input->post('link_id');
+        $alertMessage = "Menghapus data link terkait dengan ID : ".$this->input->post('link_id');
         getAlert($alertStatus, $alertMessage);
 
-        redirect('link/index');
+        redirect('link');
     }
     
 }

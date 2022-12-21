@@ -15,6 +15,7 @@
                 </nav>
             </div>
         </div>
+        <!-- Alert -->
         <?php
         if ($this->session->flashdata('alert')) {
             echo $this->session->flashdata('alert');
@@ -34,10 +35,10 @@
                         </div>
                     </div>
                     <!-- data tabel -->
-                    <div class="row p-4" id="table-hover-row">
+                    <div class="row p-4">
                         <div class="col-12">
                             <div class="table-responsive">
-                                <table class="table table-hover" id="DataTable">
+                                <table class="table table-hover" id="table1">
                                     <thead>
                                         <tr>
                                             <th>No.</th>
@@ -58,7 +59,7 @@
 
                                         ?>
                                                 <tr>
-                                                    <td><?php echo $no + $numbers; ?></td>
+                                                    <td><?php echo $no; ?></td>
                                                     <td>
                                                         <?php echo $key->message_name."<br>".$key->message_email."<br>".$key->message_phone;
                                                         

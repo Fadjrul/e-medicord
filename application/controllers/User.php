@@ -3,9 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class User extends CI_Controller {
     public function __construct() {
         parent::__construct();
+        // LOAD MODEL
         $this->load->model('m_user');
         $this->load->model('m_group');
 
+        // SESSION
         if (!$this->session->userdata('user_id') OR $this->session->userdata('user_group')!=1) {
 			// ALERT
 			$alertStatus  = 'failed';
@@ -17,26 +19,11 @@ class User extends CI_Controller {
     
 
     public function index() {
-        $this->session->unset_userdata('sess_search_user');
-
-        // PAGINATION
-        $baseUrl    = base_url() . "user/index/";
-        $totalRows  = count((array) $this->m_user->read('','',''));
-        $perPage    = $this->session->userdata('sess_rowpage');
-        $uriSegment = 4;
-        $paging     = generatePagination($baseUrl, $totalRows, $perPage, $uriSegment);
-        $page       = ($this->uri->segment($uriSegment)) ? $this->uri->segment($uriSegment) : 0;
-        
-        $data['numbers']    = $paging['numbers'];
-        $data['links']      = $paging['links'];
-        $data['total_data'] = $totalRows ;
-        
-
         
         //DATA
         $data['setting'] = getSetting();
         $data['title']   = 'Data User';
-        $data['user']    = $this->m_user->read($perPage, $page,'');
+        $data['user']    = $this->m_user->read('','','');
         $data['group']   = $this->m_group->read('','','');
 		
         
@@ -46,40 +33,7 @@ class User extends CI_Controller {
 		TemplateApp($data, $view, $viewCategory);
     }
     
-
-    public function search() {
-        if ($this->input->post('key')) {
-            $data['search'] = $this->input->post('key');
-            $this->session->set_userdata('sess_search_user', $data['search']);
-        } else {
-            $data['search'] = $this->session->userdata('sess_search_user');
-        }
-        
-        // PAGINATION
-        $baseUrl    = base_url() . "user/search/".$data['search']."/";
-        $totalRows  = count((array)$this->m_user->read('','',$data['search']));
-        $perPage    = $this->session->userdata('sess_rowpage');
-        $uriSegment = 5;
-        $paging     = generatePagination($baseUrl, $totalRows, $perPage, $uriSegment);
-        $page       = ($this->uri->segment($uriSegment)) ? $this->uri->segment($uriSegment) : 0;
-        
-        $data['numbers']    = $paging['numbers'];
-        $data['links']      = $paging['links'];
-        $data['total_data'] = $totalRows ;
-        
-        //DATA
-        $data['setting'] = getSetting();
-        $data['title']   = 'Data User';
-        $data['user']    = $this->m_user->read($perPage, $page, $data['search']);
-        $data['group']   = $this->m_group->read('','','');
-        
-        // TEMPLATE
-		$view         = "user/index";
-		$viewCategory = "all";
-		TemplateApp($data, $view, $viewCategory);
-    }
-    
-
+    // CREATE USER
     public function create() {
         csrfValidate();
         // POST
@@ -94,15 +48,19 @@ class User extends CI_Controller {
         $data['createtime']     = date('Y-m-d H:i:s');
         $this->m_user->create($data);
 
+        // LOG
+        $message    = $this->session->userdata('user_fullname')." menambah data user dengan nama : ".$data['user_name'];
+        createLog($message); 
+
         // ALERT
         $alertStatus  = "success";
-        $alertMessage = "Berhasil menambah data user ".$data['user_name'];
+        $alertMessage = "Berhasil menambah data user dengan nama : ".$data['user_name'];
         getAlert($alertStatus, $alertMessage);
 
         redirect('user');
     }
     
-
+    // UPDATE USER
     public function update() {
         csrfValidate();
         // POST
@@ -118,9 +76,13 @@ class User extends CI_Controller {
         $data['group_id']      = $this->input->post('group_id');
         $this->m_user->update($data);
 
+        // LOG
+        $message    = $this->session->userdata('user_fullname')." mengubah data user dengan nama : ".$data['user_name'];
+        createLog($message);
+
         // ALERT
         $alertStatus  = "success";
-        $alertMessage = "Berhasil mengubah data user : ".$data['user_name'];
+        $alertMessage = "Berhasil mengubah data user dengan nama : ".$data['user_name'];
         getAlert($alertStatus, $alertMessage);
 
         redirect('user');
@@ -132,9 +94,13 @@ class User extends CI_Controller {
         // POST
         $this->m_user->delete($this->input->post('user_id'));
 
+        // LOG
+        $message    = $this->session->userdata('user_fullname')." menghapus data user dengan ID : ".$this->input->post('user_id');
+        createLog($message);
+
         // ALERT
         $alertStatus  = "failed";
-        $alertMessage = "Menghapus data user : ".$this->input->post('user_name');
+        $alertMessage = "Menghapus data user dengan ID : ".$this->input->post('user_id');
         getAlert($alertStatus, $alertMessage);
 
         redirect('user');

@@ -6,16 +6,20 @@ class M_pegawai extends CI_Model {
         parent::__construct();
     }
     
-    public function read($limit, $start, $key) {
+    public function read($limit, $start, $key, $pegawai_id) {
         $this->db->select('*');
         $this->db->from('tbl_pegawai');
+
+        if($pegawai_id !=""){
+            $this->db->where('pegawai_id', $pegawai_id);
+        }
         
         if($key!=''){
             $this->db->like("nama_pegawai", $key);
-            $this->db->like("jenis_kelamin", $key);
-            $this->db->like("keterangan", $key);
-            $this->db->like("status_pegawai", $key);
-            $this->db->like("bidang_pegawai", $key);
+            $this->db->or_like("jenis_kelamin", $key);
+            $this->db->or_like("keterangan", $key);
+            $this->db->or_like("status_pegawai", $key);
+            $this->db->or_like("bidang_pegawai", $key);
         }
 
         if($limit !="" OR $start !=""){

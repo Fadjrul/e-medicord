@@ -9,12 +9,13 @@
                 <!-- Breadcrumb -->
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="<?php echo site_url('dashboard/index'); ?>"> Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="<?php echo site_url('dashboard'); ?>"> Dashboard</a></li>
                         <li class="breadcrumb-item active" aria-current="page">My Profile</a></li>
                     </ol>
                 </nav>
             </div>
         </div>
+        <!-- Alert -->
         <?php 
             if ($this->session->flashdata('alert')) {
                 echo $this->session->flashdata('alert');

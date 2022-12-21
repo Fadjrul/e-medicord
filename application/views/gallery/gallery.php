@@ -3,18 +3,19 @@
         <div class="row">
             <!-- Page Title -->
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Galeri Foto</h3>
+                <h3><?php echo $title; ?></h3>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <!-- Breadcrumb -->
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="<?php echo site_url('dashboard/index'); ?>"> Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Galeri Foto</li>
+                        <li class="breadcrumb-item active" aria-current="page"><?php echo $title; ?></li>
                     </ol>
                 </nav>
             </div>
         </div>
+        <!-- Alert -->
         <?php
         if ($this->session->flashdata('alert')) {
             echo $this->session->flashdata('alert');
@@ -114,7 +115,7 @@
                     <div class="row p-4" id="table-hover-row">
                         <div class="col-12">
                             <div class="table-responsive">
-                                <table class="table table-hover" id="DataTable">
+                                <table class="table table-hover" id="table1">
                                     <thead>
                                         <tr>
                                             <th>No.</th>
@@ -134,7 +135,7 @@
 
                                         ?>
                                                 <tr>
-                                                    <td><?php echo $no + $numbers; ?></td>
+                                                    <td><?php echo $no; ?></td>
                                                     <td><?php echo $key->gallery_name;?></td>
                                                     <td><?php echo $key->gallery_description;?></td>
                                                     <td><?php echo indonesiaDate($key->gallery_date);?></td>
@@ -162,7 +163,7 @@
                                                     </td>
                                                 </tr>
 
-                                                <!-- Modal Ubah Slider -->
+                                                <!-- Modal Ubah Galeri -->
                                                 <div class="modal fade text-start" id="FormUbah<?php echo $key->gallery_id?>" tabindex="-1" role="dialog"
                                                     aria-labelledby="myModalLabel33" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
@@ -186,6 +187,7 @@
                                                                                 <div class="form-group">
                                                                                     <?php echo csrf();?>
                                                                                     <input type="text" class="form-control" id="gallery_name" name="gallery_name" placeholder="Judul Galeri" value="<?php echo $key->gallery_name;?>">
+                                                                                    <input type="hidden" class="form-control" name="gallery_id" required="required" value="<?php echo $key->gallery_id;?>">
                                                                                     <input type="hidden" class="form-control" name="gallery_type" required="required" value="<?php echo $this->uri->segment(3);?>">
                                                                                 </div>
                                                                             </div>
@@ -217,7 +219,7 @@
                                                                             <div class="col-9">
                                                                                 <div class="form-group">
                                                                                     <span class="text-red">file sebelumnya: </span><a href="<?php echo base_url()."upload/gallery/cover/".$key->gallery_cover;?>" target="_blank" ><?php echo $key->gallery_cover;?></a>
-                                                                                    <input type="file" class="form-control" name="gallery_cover" required="required" accept=".png, .jpeg, .jpg">
+                                                                                    <input type="file" class="form-control" name="gallery_cover" accept=".png, .jpeg, .jpg">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -246,7 +248,7 @@
                                             }
                                         } else {
                                             echo '
-                                                <tr>
+                                                <tr class="text-center">
                                                     <td colspan="6">Tidak ada data ditemukan</td>
                                                 </tr>
                                                 ';

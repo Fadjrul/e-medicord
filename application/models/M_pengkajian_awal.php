@@ -6,12 +6,18 @@ class M_pengkajian_awal extends CI_Model {
         parent::__construct();
     }
     
-    public function read($limit, $start, $key, $pasien, $pegawai) {
-        $this->db->select('a.*, b.*, c.nama_pegawai');
+    public function read($limit, $start, $key, $pasien, $pegawai, $jns_key, $user, $rm_id) {
+        $this->db->select('a.*, b.*, c.*, d.*, e.*');
         $this->db->from('tbl_rm_pengkajian_awal a');
         $this->db->join('tbl_pasien b','a.pasien_id=b.pasien_id','LEFT');
         $this->db->join('tbl_pegawai c','a.pegawai_id=c.pegawai_id','LEFT');
+        $this->db->join('tbl_jns_key d','a.jns_key_id=d.jns_key_id','LEFT');
+        $this->db->join('tbl_user e','a.user_id=e.user_id','LEFT');
         
+        if($rm_id !=""){
+            $this->db->where('a.pengkajian_awal_id', $rm_id);
+        }
+
         if($pasien !=""){
             $this->db->where('a.pasien_id', $pasien);
         }
@@ -19,6 +25,14 @@ class M_pengkajian_awal extends CI_Model {
         if($pegawai !=""){
             $this->db->where('a.pegawai_id', $pegawai);
             
+        }
+
+        if($jns_key !=""){
+            $this->db->where('a.jns_key_id', $jns_key);
+        }
+
+        if($user !=""){
+            $this->db->where('a.user_id', $user);
         }
 
         if($key!=''){
@@ -58,6 +72,7 @@ class M_pengkajian_awal extends CI_Model {
             $this->db->or_like("a.masalah_ekskresi", $key);
             $this->db->or_like("a.mulut", $key);
             $this->db->or_like("a.abdomen", $key);
+            $this->db->or_like("a.abdomen_tambahan", $key);
             $this->db->or_like("a.bab", $key);
             $this->db->or_like("a.konsistensi_bab", $key);
             $this->db->or_like("a.diet", $key);
@@ -68,9 +83,11 @@ class M_pengkajian_awal extends CI_Model {
             $this->db->or_like("a.akral", $key);
             $this->db->or_like("a.patah_tulang", $key);
             $this->db->or_like("a.eks_fiksasi", $key);
+            $this->db->or_like("a.eks_fiksasi_tambahan", $key);
             $this->db->or_like("a.kekuatan_otot", $key);
             $this->db->or_like("a.turgor", $key);
             $this->db->or_like("a.masalah_muskuloskeletal", $key);
+            $this->db->or_like("a.masalah_muskuloskeletal_tambahan", $key);
             $this->db->or_like("a.penis", $key);
             $this->db->or_like("a.scrotum", $key);
             $this->db->or_like("a.testis", $key);
@@ -91,6 +108,10 @@ class M_pengkajian_awal extends CI_Model {
             $this->db->or_like("b.jenis_kelamin", $key);
             $this->db->or_like("b.tgl_lahir_pasien", $key);
             $this->db->or_like("c.nama_pegawai", $key);
+            $this->db->or_like("c.keterangan", $key);
+            $this->db->or_like("c.keterangan", $key);
+            $this->db->or_like("d.nama_jns_key", $key);
+            $this->db->or_like("e.user_fullname", $key);
         }
 
         if($limit !="" OR $start !=""){

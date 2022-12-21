@@ -17,7 +17,7 @@ class Auth extends CI_Controller
 			$alertStatus  = 'success';
 			$alertMessage = 'Selamat Datang, ' . $this->session->userdata('user_fullname');
 			getAlert($alertStatus, $alertMessage);
-			redirect('dashboard/index');
+			redirect('dashboard');
 		} else {
 			// DATA
 			$data['setting'] = getSetting();
@@ -55,7 +55,12 @@ class Auth extends CI_Controller
 					$logMessage = $data['user_fullname'] . " melakukan login ke sistem";
 					createLog($logMessage);
 
-					redirect('dashboard/index');
+					// ALERT
+					$alertStatus  = 'success';
+					$alertMessage = 'Selamat Datang di e-medicord, ' . $this->session->userdata('user_fullname');
+					getAlert($alertStatus, $alertMessage);
+
+					redirect('dashboard');
 				} else {
 					// ALERT
 					$alertStatus  = 'failed';

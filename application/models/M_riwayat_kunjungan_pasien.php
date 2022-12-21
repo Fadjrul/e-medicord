@@ -6,14 +6,16 @@ class M_riwayat_kunjungan_pasien extends CI_Model {
         parent::__construct();
     }
     
-    public function read($limit, $start, $key, $pasien, $dokter, $poliklinik, $status_pasien, $kepesertaan_pasien) {
-        $this->db->select('a.*, b.*, c.*, d.*, e.*, f.*');
+    public function read($limit, $start, $key, $pasien, $dokter, $poliklinik, $status_pasien, $kepesertaan_pasien, $jns_key, $user_id, $rm_id) {
+        $this->db->select('a.*, b.*, c.*, d.*, e.*, f.*, g.*, h.*');
         $this->db->from('tbl_rm_riwayat_kunjungan_pasien a');
         $this->db->join('tbl_pasien b','a.pasien_id=b.pasien_id','LEFT');
         $this->db->join('tbl_dokter c','a.dokter_id=c.dokter_id','LEFT');
         $this->db->join('tbl_poliklinik d','a.poliklinik_id=d.poliklinik_id','LEFT');
         $this->db->join('tbl_status_pasien e','b.status_pasien_id=e.status_pasien_id','LEFT');
         $this->db->join('tbl_kepesertaan_pasien f','b.kepesertaan_pasien_id=f.kepesertaan_pasien_id','LEFT');
+        $this->db->join('tbl_jns_key g','a.jns_key_id=g.jns_key_id','LEFT');
+        $this->db->join('tbl_user h','a.user_id=h.user_id','LEFT');
         
         if($pasien !=""){
             $this->db->where('a.pasien_id', $pasien);
@@ -30,11 +32,23 @@ class M_riwayat_kunjungan_pasien extends CI_Model {
         }
 
         if($status_pasien !=""){
-            $this->db->where('b.status_pasien_id', $status_pasien);
+            $this->db->where('a.status_pasien_id', $status_pasien);
         }
 
         if($kepesertaan_pasien !=""){
-            $this->db->where('b.kepesertaan_pasien_id', $kepesertaan_pasien);
+            $this->db->where('a.kepesertaan_pasien_id', $kepesertaan_pasien);
+        }
+
+        if($jns_key !=""){
+            $this->db->where('a.jns_key_id', $jns_key);
+        }
+
+        if($user_id !=""){
+            $this->db->where('a.user_id', $user);
+        }
+
+        if($rm_id !=""){
+            $this->db->where('a.riwayat_kunjungan_pasien_id', $rm_id);
         }
 
         if($key!=''){
@@ -55,6 +69,8 @@ class M_riwayat_kunjungan_pasien extends CI_Model {
             $this->db->or_like("d.nama_poliklinik", $key);
             $this->db->or_like("e.nama_status_pasien", $key);
             $this->db->or_like("f.nama_kepesertaan_pasien", $key);
+            $this->db->or_like("g.nama_jns_key", $key);
+            $this->db->or_like("h.user_fullname", $key);
         }
 
         if($limit !="" OR $start !=""){

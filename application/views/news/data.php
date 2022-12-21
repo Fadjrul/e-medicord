@@ -36,10 +36,10 @@
                     </div>
 
                     <!-- data tabel -->
-                    <div class="row p-4" id="table-hover-row">
+                    <div class="row p-4">
                         <div class="col-12">
                             <div class="table-responsive">
-                                <table class="table table-hover" id="DataTable">
+                                <table class="table table-hover" id="table1">
                                     <thead>
                                         <tr>
                                             <th>No.</th>
@@ -60,7 +60,7 @@
 
                                         ?>
                                                 <tr>
-                                                    <td><?php echo $no + $numbers; ?></td>
+                                                    <td><?php echo $no; ?></td>
                                                     <td><?php echo indonesiaDate($key->news_date);?></td>
                                                     <td><?php echo $key->news_title;?></td>
                                                     <td><?php echo $key->news_category_name;?></td>

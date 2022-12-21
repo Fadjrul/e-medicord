@@ -3,7 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Field extends CI_Controller {
     public function __construct() {
         parent::__construct();
+        // LOAD MODEL
         $this->load->model('m_field');
+        // SESSION
         if (!($this->session->userdata('user_id'))) {
             // ALERT
 			$alertStatus  = 'failed';
@@ -15,59 +17,12 @@ class Field extends CI_Controller {
     
 
     public function index() {
-        $this->session->unset_userdata('sess_search_field');
-
-        // PAGINATION
-        $baseUrl    = base_url() . "field/index/";
-        $totalRows  = count((array) $this->m_field->read('','',''));
-        $perPage    = $this->session->userdata('sess_rowpage');
-        $uriSegment = 3;
-        $paging     = generatePagination($baseUrl, $totalRows, $perPage, $uriSegment);
-        $page       = ($this->uri->segment($uriSegment)) ? $this->uri->segment($uriSegment) : 0;
-        
-        $data['numbers']    = $paging['numbers'];
-        $data['links']      = $paging['links'];
-        $data['total_data'] = $totalRows ;
-        
-
         
         //DATA
         $data['setting'] = getSetting();
         $data['title']   = 'Bidang';
-        $data['field']   = $this->m_field->read($perPage, $page,'');
+        $data['field']   = $this->m_field->read('','','');
 		
-        
-        // TEMPLATE
-		$view         = "news/field";
-		$viewCategory = "all";
-		TemplateApp($data, $view, $viewCategory);
-    }
-    
-
-    public function search() {
-        if ($this->input->post('key')) {
-            $data['search'] = $this->input->post('key');
-            $this->session->set_userdata('sess_search_field', $data['search']);
-        } else {
-            $data['search'] = $this->session->userdata('sess_search_field');
-        }
-        
-        // PAGINATION
-        $baseUrl    = base_url() . "field/search/".$data['search']."/";
-        $totalRows  = count((array)$this->m_field->read('','',$data['search']));
-        $perPage    = $this->session->userdata('sess_rowpage');
-        $uriSegment = 3;
-        $paging     = generatePagination($baseUrl, $totalRows, $perPage, $uriSegment);
-        $page       = ($this->uri->segment($uriSegment)) ? $this->uri->segment($uriSegment) : 0;
-        
-        $data['numbers']    = $paging['numbers'];
-        $data['links']      = $paging['links'];
-        $data['total_data'] = $totalRows ;
-        
-        //DATA
-        $data['setting'] = getSetting();
-        $data['title']   = 'Bidang';
-        $data['field']   = $this->m_field->read($perPage, $page, $data['search']);
         
         // TEMPLATE
 		$view         = "news/field";
@@ -105,7 +60,7 @@ class Field extends CI_Controller {
         $this->m_field->update($data);
 
         // LOG
-        $message    = $this->session->userdata('user_name')." mengubah data kategori bidang berita dengan ID = ".$data['field_id']." - ".$data['field_name'];
+        $message    = $this->session->userdata('user_fullname')." mengubah data kategori bidang berita dengan ID : ".$data['field_id']." - ".$data['field_name'];
         createLog($message);
 
         // ALERT
@@ -123,12 +78,12 @@ class Field extends CI_Controller {
         $this->m_field->delete($this->input->post('field_id'));
         
         // LOG
-        $message    = $this->session->userdata('user_name')." menghapus data kategori bidang berita dengan ID = ".$this->input->post('field_id')." - ".$this->input->post('field_name');
+        $message    = $this->session->userdata('user_fullname')." menghapus data kategori bidang berita dengan ID : ".$this->input->post('field_id')." - ".$this->input->post('field_name');
         createLog($message);
 
         // ALERT
         $alertStatus  = "failed";
-        $alertMessage = "Menghapus data kategori bidang berita : ".$this->input->post('field_name');
+        $alertMessage = "Menghapus data kategori bidang berita ID : ".$this->input->post('field_id');
         getAlert($alertStatus, $alertMessage);
 
         redirect('field');

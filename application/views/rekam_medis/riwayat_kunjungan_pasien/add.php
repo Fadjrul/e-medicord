@@ -9,13 +9,19 @@
                 <!-- Breadcrumb -->
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="<?php echo site_url('dashboard/index');?>"> Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="<?php echo site_url('pengkajian_awal/index');?>"> Rekam Medis Riwayat Kunjungan Pasien</a></li>
+                        <li class="breadcrumb-item"><a href="<?php echo site_url('dashboard');?>"> Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="<?php echo site_url('pengkajian_awal');?>"> Rekam Medis Riwayat Kunjungan Pasien</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Tambah Data</li>
                     </ol>
                 </nav>
             </div>
         </div>
+        <!-- Alert -->
+        <?php
+        if ($this->session->flashdata('alert')) {
+            echo $this->session->flashdata('alert');
+            unset($_SESSION['alert']);
+        } ?>
     </div>
 
     <!-- Page content -->
@@ -73,7 +79,10 @@
                                                     <td>
                                                         <div class="form-group">
                                                         <?php echo csrf();?>
-                                                        <input type="hidden" id="pasien_id" class="form-control" name="pasien_id" required="required" value="<?php echo $pasien[0]->pasien_id; ?>">
+                                                        <input type="hidden" class="form-control" name="user_id" required="required" value="<?php echo $user[0]->user_id; ?>">
+                                                        <input type="hidden" class="form-control" name="pasien_id" required="required" value="<?php echo $pasien[0]->pasien_id; ?>">
+                                                        <input type="hidden" class="form-control" name="poliklinik_id" required="required" value="<?php echo $poliklinik[0]->poliklinik_id; ?>">
+                                                        <input type="hidden" class="form-control" name="jns_key_id" required="required" value="<?php echo $jns_key[0]->jns_key_id; ?>">
                                                         : <?php echo $pasien[0]->nama_pasien; ?>
                                                         </div>
                                                     </td>
@@ -123,7 +132,7 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <div class="form-group">: <?php echo $pasien[0]->no_bpjs_pasien; ?> / </div>
+                                                        <div class="form-group">: <?php echo $pasien[0]->no_bpjs_pasien; ?> / <?php echo $nik_pasien; ?></div>
                                                     </td>
                                                     <td class="border-start">
                                                         <div class="form-group">
@@ -176,7 +185,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="border-end">
-                                                        <div class="form-group"><?php echo $pasien[0]->createtime; ?></div>
+                                                        <div class="form-group"><?php echo indonesiaDate($pasien[0]->tgl_daftar); ?></div>
                                                     </td>
                                                     <td class="border-end">
                                                         <fieldset class="form-group">
@@ -184,7 +193,7 @@
                                                                 <option selected>- Pilih Poliklinik - </option>
                                                                 <?php
                                                                     foreach($poliklinik as $po){
-                                                                        if($pasien[0]->poliklinik_id == $po->poliklinik_id){
+                                                                        if($riwayat_kunjungan_pasien[0]->poliklinik_id == $po->poliklinik_id){
                                                                             echo '<option value="'.$po->poliklinik_id.'">'.$po->nama_poliklinik.'</option>';
                                                                         }else{
                                                                             echo '<option value="'.$po->poliklinik_id.'">'.$po->nama_poliklinik.'</option>';
@@ -195,21 +204,21 @@
                                                         </fieldset>
                                                     </td>
                                                     <td class="border-end">
-                                                        <textarea class="form-control" name="subjektif" rows="12"></textarea>
+                                                        <textarea class="form-control" name="subjektif" placeholder="Ketikkan sesuatu atau beri tanda '-' jika tidak ada data" rows="12"></textarea>
                                                     </td>
                                                     <td class="border-end">
-                                                        <textarea class="form-control" name="objektif" rows="12"></textarea></td>
+                                                        <textarea class="form-control" name="objektif" placeholder="Ketikkan sesuatu atau beri tanda '-' jika tidak ada data" rows="12"></textarea></td>
                                                     <td class="border-end">
-                                                        <textarea class="form-control" name="assesment" rows="12"></textarea></td>
+                                                        <textarea class="form-control" name="assesment" placeholder="Ketikkan sesuatu atau beri tanda '-' jika tidak ada data" rows="12"></textarea></td>
                                                     <td class="border-end">
-                                                        <textarea class="form-control" name="planning" rows="12"></textarea>
+                                                        <textarea class="form-control" name="planning" placeholder="Ketikkan sesuatu atau beri tanda '-' jika tidak ada data" rows="12"></textarea>
                                                     </td>
                                                     <td>
-                                                        <select class="form-select" name="poliklinik_id">
-                                                            <option selected>- Pilih Poliklinik - </option>
+                                                        <select class="form-select" name="dokter_id">
+                                                            <option selected>- Pilih dokter - </option>
                                                             <?php
                                                                 foreach($dokter as $d){
-                                                                    if($pasien[0]->dokter_id == $d->dokter_id){
+                                                                    if($riwayat_kunjungan_pasien[0]->dokter_id == $d->dokter_id){
                                                                         echo '<option value="'.$d->dokter_id.'">'.$d->nama_dokter.'</option>';
                                                                     }else{
                                                                         echo '<option value="'.$d->dokter_id.'">'.$d->nama_dokter.'</option>';
@@ -223,8 +232,8 @@
                                         </div>
                                         <div class="row mt-4">
                                             <div class="col-12 d-flex justify-content-end mt-2">
-                                                <button type="submit" class="btn btn-primary btn-sm me-1 mb-1" title="tambah">Simpan</button>
-                                                <button type="reset" class="btn btn-light-secondary btn-sm me-1 mb-1" title="reset">Reset</button>    
+                                                <button type="submit" class="btn btn-primary btn-sm me-1 mb-1" title="tambah"><i class="bi bi-save2"></i> Simpan</button>
+                                                <button type="reset" class="btn btn-light-secondary btn-sm me-1 mb-1" title="reset"><i class="bi bi-x-square"></i> Reset</button>    
                                             </div>
                                         </div>
                                     </form>

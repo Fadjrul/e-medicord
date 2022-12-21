@@ -15,6 +15,7 @@
                 </nav>
             </div>
         </div>
+        <!-- ALert -->
         <?php 
             if ($this->session->flashdata('alert')) {
                 echo $this->session->flashdata('alert');
@@ -86,7 +87,7 @@
                                                                 <option value="">- Pilih Group -</option>
                                                                 <?php
                                                                     foreach($group as $g){
-                                                                        echo '<option value="'.$g->id_group.'">'.$g->group_name.'</option>';
+                                                                        echo '<option value="'.$g->group_id.'">'.$g->group_name.'</option>';
                                                                     }
                                                                 ?>
                                                             </select>
@@ -135,10 +136,10 @@
                     </div>
 
                     <!-- data tabel -->
-                    <div class="row p-4" id="table-hover-row">
+                    <div class="row p-4">
                         <div class="col-12">
                             <div class="table-responsive">
-                                <table class="table table-hover" id="DataTable">
+                                <table class="table table-hover" id="table1">
                                     <thead>
                                         <tr>
                                             <th>No.</th>
@@ -158,7 +159,7 @@
 
                                         ?>
                                                 <tr>
-                                                    <td><?php echo $no + $numbers; ?></td>
+                                                    <td><?php echo $no; ?></td>
                                                     <td><?php echo $key->user_fullname; ?></td>
                                                     <td><?php echo $key->user_name; ?></td>
                                                     <td><?php echo $key->user_email; ?></td>
@@ -270,8 +271,8 @@
                                                                         <div class="col-9">
                                                                             <div class="form-group">
                                                                             <?php echo csrf();?>
-                                                                                <input type="text" placeholder="Nama Lengkap"
-                                                                                    class="form-control" id="user_fullname" name="user_fullname" value="<?php echo $key->user_fullname;?>" required="required">
+                                                                                <input type="hidden" class="form-control" name="user_id" value="<?php echo $key->user_id;?>" required>
+                                                                                <input type="text" placeholder="Nama Lengkap" class="form-control" id="user_fullname" name="user_fullname" value="<?php echo $key->user_fullname;?>" required="required">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -296,10 +297,10 @@
                                                                                 <option value="">- Pilih Group -</option>
                                                                                 <?php
                                                                                     foreach($group as $g){
-                                                                                        if($key->group_id == $g->id_group){
-                                                                                            echo '<option value="'.$g->id_group.'" selected>'.$g->group_name.'</option>';
+                                                                                        if($key->group_id == $g->group_id){
+                                                                                            echo '<option value="'.$g->group_id.'" selected>'.$g->group_name.'</option>';
                                                                                         }else{  
-                                                                                            echo '<option value="'.$g->id_group.'">'.$g->group_name.'</option>';
+                                                                                            echo '<option value="'.$g->group_id.'">'.$g->group_name.'</option>';
                                                                                         }
                                                                                         
                                                                                     }

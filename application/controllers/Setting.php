@@ -4,10 +4,11 @@ class Setting extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
+		// LOAD MODEL
 		$this->load->model("m_setting");
 		$this->load->library('upload');
 
-		// check session data
+		// SESSION
 		if (!$this->session->userdata('user_id') or $this->session->userdata('user_group') != 1) {
 			// ALERT
 			$alertStatus  = 'failed';
@@ -90,7 +91,7 @@ class Setting extends CI_Controller
 		getAlert($alertStatus, $alertMessage);
 
 		// LOG
-		$logMessage = "Update Informasi Sistem";
+		$logMessage = "Update Informasi Aplikasi";
 		createLog($logMessage);
 
 		redirect('setting/index');

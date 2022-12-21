@@ -8,7 +8,7 @@ class M_pasien extends CI_Model
         parent::__construct();
     }
 
-    public function read($limit, $start, $key, $status_pasien, $kepesertaan_pasien, $jns_key)
+    public function read($limit, $start, $key, $status_pasien, $kepesertaan_pasien, $jns_key, $pasien_id)
     {
         $this->db->select('a.*, b.*, c.*, d.* ');
         $this->db->from('tbl_pasien a');
@@ -28,6 +28,10 @@ class M_pasien extends CI_Model
             $this->db->where('a.jns_key_id', $jns_key);
         }
 
+        if($pasien_id !=""){
+            $this->db->where('a.pasien_id', $pasien_id);
+        }
+
         if ($key != '') {
             $this->db->like("a.no_rekam_medis", $key);
             $this->db->or_like("a.nama_pasien", $key);
@@ -35,6 +39,7 @@ class M_pasien extends CI_Model
             $this->db->or_like("a.nama_kepala_keluarga", $key);
             $this->db->or_like("a.no_kk", $key);
             $this->db->or_like("a.jenis_kelamin", $key);
+            $this->db->or_like("a.tempat_lahir", $key);
             $this->db->or_like("a.tgl_lahir_pasien", $key);
             $this->db->or_like("a.alamat_pasien", $key);
             $this->db->or_like("a.no_telp_pasien", $key);
@@ -44,6 +49,7 @@ class M_pasien extends CI_Model
             $this->db->or_like("b.nama_status_pasien", $key);
             $this->db->or_like("c.nama_kepesertaan_pasien", $key);
             $this->db->or_like("d.nama_jns_key", $key);
+            $this->db->or_like("a.tgl_daftar", $key);
             $this->db->or_like("a.createtime", $key);
         }
 
@@ -65,7 +71,7 @@ class M_pasien extends CI_Model
 
     public function last()
     {
-        $this->db->select('no_rekam_medis');
+        $this->db->select('no_rekam_medis, nik_pasien, no_kk, alamat_pasien, no_telp_pasien, nama_pasien, no_kk');
         $this->db->from('tbl_pasien');
         $this->db->order_by('no_rekam_medis', 'desc');
         $this->db->limit(1);

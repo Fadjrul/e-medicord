@@ -34,7 +34,7 @@ class M_status_pasien extends CI_Model
 
     public function get($id)
     {
-        $this->db->where('id_status_pasien', $id);
+        $this->db->where('status_pasien_id', $id);
         $query = $this->db->get('tbl_status_pasien', 1);
         return $query->result();
     }

@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Dokter extends CI_Controller {
     public function __construct() {
         parent::__construct();
+        // LOAD MODEL AND LIBRARY
         $this->load->model('m_dokter');
         $this->load->library('upload');
         
@@ -17,66 +18,19 @@ class Dokter extends CI_Controller {
     
 
     public function index() {
-        $this->session->unset_userdata('sess_search_dokter');
-
-        // PAGINATION
-        $baseUrl    = base_url() . "Dokter/index/";
-        $totalRows  = count((array) $this->m_dokter->read('','',''));
-        $perPage    = $this->session->userdata('sess_rowpage');
-        $uriSegment = 4;
-        $paging     = generatePagination($baseUrl, $totalRows, $perPage, $uriSegment);
-        $page       = ($this->uri->segment($uriSegment)) ? $this->uri->segment($uriSegment) : 0;
-        
-        $data['numbers']    = $paging['numbers'];
-        $data['links']      = $paging['links'];
-        $data['total_data'] = $totalRows ;
-        
-
         
         //DATA
         $data['setting']       = getSetting();
         $data['title']         = 'Data Dokter';
-        $data['dokter']        = $this->m_dokter->read($perPage, $page,'');
+        $data['dokter']        = $this->m_dokter->read('','','','');
 		
-        
-        // TEMPLATE
-		$view         = "dokter/index";
-		$viewCategory = "all";
-		TemplateApp($data, $view, $viewCategory);
-    }
-    
-
-    public function search() {
-        if ($this->input->post('key')) {
-            $data['search'] = $this->input->post('key');
-            $this->session->set_userdata('sess_search_dokter', $data['search']);
-        } else {
-            $data['search'] = $this->session->userdata('sess_search_dokter');
-        }
-        
-        // PAGINATION
-        $baseUrl    = base_url() . "Dokter/search/".$data['search']."/";
-        $totalRows  = count((array)$this->m_dokter->read('','',$data['search']));
-        $perPage    = $this->session->userdata('sess_rowpage');
-        $uriSegment = 5;
-        $paging     = generatePagination($baseUrl, $totalRows, $perPage, $uriSegment);
-        $page       = ($this->uri->segment($uriSegment)) ? $this->uri->segment($uriSegment) : 0;
-        
-        $data['numbers']    = $paging['numbers'];
-        $data['links']      = $paging['links'];
-        $data['total_data'] = $totalRows ;
-        
-        //DATA
-        $data['setting']       = getSetting();
-        $data['title']         = 'Data Dokter';
-        $data['dokter']        = $this->m_dokter->read($perPage, $page, $data['search']);
-        
         // TEMPLATE
 		$view         = "dokter/index";
 		$viewCategory = "all";
 		TemplateApp($data, $view, $viewCategory);
     }
 
+    // CREATE DATA DOKTER
     public function create() {
         csrfValidate();
 
@@ -108,19 +62,19 @@ class Dokter extends CI_Controller {
             $this->m_dokter->create($data);
 
             // LOG
-            $message    = $this->session->userdata('user_name')." menambah data dokter dengan nama = ".$data['nama_dokter'];
+            $message    = $this->session->userdata('user_fullname')." menambah data dokter dengan nama : ".$data['nama_dokter'];
             createLog($message);
 
             // ALERT
             $alertStatus  = "success";
-            $alertMessage = "Berhasil menambah data dokter ".$data['nama_dokter'];
+            $alertMessage = "Berhasil menambah data dokter dengan nama : ".$data['nama_dokter'];
             getAlert($alertStatus, $alertMessage);
 
-            redirect('dokter/index');
+            redirect('dokter');
         }
     }
     
-
+    // UPDATE DATA DOKTER
     public function update() {
         csrfValidate();
         
@@ -152,12 +106,12 @@ class Dokter extends CI_Controller {
                 $this->m_dokter->update($data);
 
                 // LOG
-                $message    = $this->session->userdata('user_name')." mengubah data dokter dengan nama = ".$data['nama_dokter'];
+                $message    = $this->session->userdata('user_fullname')." mengubah data dokter dengan nama : ".$data['nama_dokter'];
                 createLog($message);
 
                 // ALERT
                 $alertStatus  = "success";
-                $alertMessage = "Berhasil mengubah data dokter : ".$data['nama_dokter'];
+                $alertMessage = "Berhasil mengubah data dokter dengan nama : ".$data['nama_dokter'];
                 getAlert($alertStatus, $alertMessage);
 
 
@@ -173,15 +127,15 @@ class Dokter extends CI_Controller {
 
         // ALERT
         $alertStatus  = "success";
-        $alertMessage = "Berhasil mengubah data dokter : ".$data['nama_dokter'];
+        $alertMessage = "Berhasil mengubah data dokter dengan nama : ".$data['nama_dokter'];
         getAlert($alertStatus, $alertMessage);
 
         }
 
-        redirect('dokter/index');
+        redirect('dokter');
     }
     
-
+    // DLETE DATA DOKTER
     public function delete() {
         csrfValidate();
         // POST
@@ -189,15 +143,15 @@ class Dokter extends CI_Controller {
         unlink('./upload/ttd/'.$this->input->post('ttd_dokter'));
 
         // LOG
-        $message    = $this->session->userdata('user_name')." menghapus data dokter dengan nama = ".$data['nama_dokter'];
+        $message    = $this->session->userdata('user_fullname')." menghapus data dokter dengan ID : ".$this->input->post('dokter_id');
         createLog($message);
 
         // ALERT
         $alertStatus  = "failed";
-        $alertMessage = "Menghapus data dokter : ".$this->input->post('nama_dokter');
+        $alertMessage = "Menghapus data dokter dengan ID : ".$this->input->post('dokter_id');
         getAlert($alertStatus, $alertMessage);
 
-        redirect('dokter/index');
+        redirect('dokter');
     }
     
 }

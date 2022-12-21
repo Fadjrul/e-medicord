@@ -3,11 +3,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class News extends CI_Controller {
     public function __construct() {
         parent::__construct();
+        // LOAD MODEL & LIBRARY
         $this->load->model('m_news');
         $this->load->model('m_news_category');
         $this->load->model('m_field');
         $this->load->library('upload');
 
+        // SESSION
         if (!($this->session->userdata('user_id'))) {
             // ALERT
 			$alertStatus  = 'failed';
@@ -19,26 +21,11 @@ class News extends CI_Controller {
     
 
     public function index() {
-        $this->session->unset_userdata('sess_search_news');
-
-        // PAGINATION
-        $baseUrl    = base_url() . "news/index/";
-        $totalRows  = count((array) $this->m_news->read('','','','',''));
-        $perPage    = $this->session->userdata('sess_rowpage');
-        $uriSegment = 3;
-        $paging     = generatePagination($baseUrl, $totalRows, $perPage, $uriSegment);
-        $page       = ($this->uri->segment($uriSegment)) ? $this->uri->segment($uriSegment) : 0;
-        
-        $data['numbers']    = $paging['numbers'];
-        $data['links']      = $paging['links'];
-        $data['total_data'] = $totalRows ;
-        
-
         
         //DATA
         $data['setting'] = getSetting();
         $data['title']   = 'Informasi';
-        $data['news']    = $this->m_news->read($perPage, $page,'','','');
+        $data['news']    = $this->m_news->read('', '', '', '', '');
 		
         
         // TEMPLATE
@@ -47,38 +34,6 @@ class News extends CI_Controller {
 		TemplateApp($data, $view, $viewCategory);
     }
     
-
-    public function search() {
-        if ($this->input->post('key')) {
-            $data['search'] = $this->input->post('key');
-            $this->session->set_userdata('sess_search_news', $data['search']);
-        } else {
-            $data['search'] = $this->session->userdata('sess_search_news');
-        }
-        
-        // PAGINATION
-        $baseUrl    = base_url() . "news/search/".$data['search']."/";
-        $totalRows  = count((array)$this->m_news->read('','',$data['search'],'',''));
-        $perPage    = $this->session->userdata('sess_rowpage');
-        $uriSegment = 5;
-        $paging     = generatePagination($baseUrl, $totalRows, $perPage, $uriSegment);
-        $page       = ($this->uri->segment($uriSegment)) ? $this->uri->segment($uriSegment) : 0;
-        
-        $data['numbers']    = $paging['numbers'];
-        $data['links']      = $paging['links'];
-        $data['total_data'] = $totalRows ;
-        
-        //DATA
-        $data['setting'] = getSetting();
-        $data['title']   = 'Informasi';
-        $data['news']    = $this->m_news->read($perPage, $page, $data['search'],'','');
-        
-        // TEMPLATE
-		$view         = "news/data";
-		$viewCategory = "all";
-		TemplateApp($data, $view, $viewCategory);
-    }
-
 
     public function create_page() {
         //DATA
@@ -162,12 +117,12 @@ class News extends CI_Controller {
         $this->m_news->create($data);
 
         // LOG
-        $message    = $this->session->userdata('user_name')." menambah data informasi ";
+        $message    = $this->session->userdata('user_fullname')." menambah data informasi : ".$data['news_title'];
         createLog($message);
 
         // ALERT
         $alertStatus  = "success";
-        $alertMessage = "Berhasil menambah data informasi ";
+        $alertMessage = "Berhasil menambah data informasi : ".$data['news_title'];
         getAlert($alertStatus, $alertMessage);
 
         redirect('news');
@@ -210,12 +165,12 @@ class News extends CI_Controller {
                 $this->m_news->update($data);
     
                 // LOG
-                $message    = $this->session->userdata('user_name')." mengubah data informasi dengan ID = ".$data['news_id'];
+                $message    = $this->session->userdata('user_fullname')." mengubah data informasi dengan ID - nama : ".$data['news_id']." - ".$data['news_title'];
                 createLog($message);
     
                 // ALERT
                 $alertStatus  = "success";
-                $alertMessage = "Berhasil mengubah data informasi ID : ".$data['news_id'];
+                $alertMessage = "Berhasil mengubah data informasi ID : ".$data['news_title'];
                 getAlert($alertStatus, $alertMessage);
             }
         }else{
@@ -229,12 +184,12 @@ class News extends CI_Controller {
             $this->m_news->update($data);
 
             // LOG
-            $message    = $this->session->userdata('user_name')." mengubah data informasi dengan ID = ".$data['news_id'];
+            $message    = $this->session->userdata('user_name')." mengubah data informasi dengan ID : ".$data['news_id'];
             createLog($message);
 
             // ALERT
             $alertStatus  = "success";
-            $alertMessage = "Berhasil mengubah data informasi ID : ".$data['news_id'];
+            $alertMessage = "Berhasil mengubah data informasi nama : ".$data['news_title'];
             getAlert($alertStatus, $alertMessage);
         }
 
@@ -250,12 +205,12 @@ class News extends CI_Controller {
         $this->m_news->delete($this->input->post('news_id'));
         
         // LOG
-        $message    = $this->session->userdata('user_name')." menghapus data informasi dengan ID = ".$this->input->post('news_id');
+        $message    = $this->session->userdata('user_name')." menghapus data informasi dengan ID : ".$this->input->post('news_id');
         createLog($message);
 
         // ALERT
         $alertStatus  = "failed";
-        $alertMessage = "Menghapus data informasi ID : ".$this->input->post('news_id');
+        $alertMessage = "Menghapus data informasi dengan ID : ".$this->input->post('news_id');
         getAlert($alertStatus, $alertMessage);
 
         redirect('news');

@@ -82,10 +82,10 @@
                     </div>
 
                     <!-- data tabel -->
-                    <div class="row p-4" id="table-hover-row">
+                    <div class="row p-4">
                         <div class="col-12">
                             <div class="table-responsive">
-                                <table class="table table-hover" id="DataTable">
+                                <table class="table table-hover" id="table1">
                                     <thead>
                                         <tr>
                                             <th>No.</th>
@@ -102,7 +102,7 @@
 
                                         ?>
                                                 <tr>
-                                                    <td><?php echo $no + $numbers; ?></td>
+                                                    <td><?php echo $no; ?></td>
                                                     <td><?php echo $key->group_name; ?></td>
                                                     <td>
                                                         <div class="btn-group dropstart mb-1">
@@ -183,8 +183,8 @@
                                                                         <div class="col-9">
                                                                             <div class="form-group">
                                                                             <?php echo csrf();?>
-                                                                                <input type="text" placeholder="Nama Group"
-                                                                                    class="form-control" id="group_name" name="group_name" value="<?php echo $key->group_name;?>" required="required">
+                                                                                <input type="hidden" class="form-control" name="group_id" value="<?php echo $key->group_id;?>" required>
+                                                                                <input type="text" placeholder="Nama Group" class="form-control" id="group_name" name="group_name" value="<?php echo $key->group_name;?>" required="required">
                                                                             </div>
                                                                         </div>
                                                                     </div>

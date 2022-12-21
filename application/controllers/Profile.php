@@ -3,10 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Profile extends CI_Controller {
     public function __construct() {
         parent::__construct();
+        // LOAD MODEL
         $this->load->model('m_user');
         $this->load->model('m_group');
         $this->load->library('upload');
 
+        // SESSION
         if (!($this->session->userdata('user_id'))) {
             // ALERT
 			$alertStatus  = 'failed';
@@ -46,7 +48,7 @@ class Profile extends CI_Controller {
                         $alertStatus  = "failed";
                         $alertMessage = "Password baru tidak boleh bernilai kosong";
                         getAlert($alertStatus, $alertMessage);
-                        redirect('profile/index');
+                        redirect('profile');
                         clean_all_processes();
                     }
                 }else{
@@ -55,7 +57,7 @@ class Profile extends CI_Controller {
                     $alertStatus  = "failed";
                     $alertMessage = "Password baru dan konfirmasi tidak cocok";
                     getAlert($alertStatus, $alertMessage);
-                    redirect('profile/index');
+                    redirect('profile');
                     clean_all_processes();
                 }
             }else{
@@ -64,7 +66,7 @@ class Profile extends CI_Controller {
                 $alertStatus  = "failed";
                 $alertMessage = "Password Lama Tidak Sama dengan database";
                 getAlert($alertStatus, $alertMessage);
-                redirect('profile/index');
+                redirect('profile');
                 clean_all_processes();
             }
         }
@@ -117,12 +119,16 @@ class Profile extends CI_Controller {
         );
         $this->session->set_userdata($session);
 
+        // LOG
+        $message    = $this->session->userdata('user_fullname')." mengubah data Profile : ".$data['user_name'];
+        createLog($message);
+
         // ALERT
         $alertStatus  = "success";
         $alertMessage = "Berhasil mengubah data profile : ".$data['user_name'];
         getAlert($alertStatus, $alertMessage);
 
-        redirect('profile/index');
+        redirect('profile');
 
     }
     
